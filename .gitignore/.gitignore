@@ -1,1 +1,5 @@
 *.kileprj
+../*.pdf
+../*.kilepr
+../*.aux
+../*.toc
