@@ -1,0 +1,123 @@
+\documentclass[a4paper, english, 10pt]{report}
+
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2cm,marginparwidth=1cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+
+%% Own packages
+\usepackage{subfiles}
+\usepackage{fancyhdr}
+\usepackage{fancyref}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage[toc,page]{appendix}
+
+\setlength{\headheight}{30pt}
+\bibliographystyle{apalike}
+
+
+% Fuss und Kopfzeile neu Definieren
+\fancypagestyle{plain}{%
+\fancyhf{} %alle Kopf- und Fußzeilenfelder bereinigen
+\fancyfoot[OR]{\thepage} %Seitennummer
+\fancyfoot[EL]{\thepage}
+\fancyhead[L]{Bachelor Thesis}
+\fancyhead[R]{Michael Kurmann}}
+
+\pagestyle{plain}
+
+% Definings for inputcode in lisings
+\usepackage{color}
+
+
+% Title Page
+\title{BAT - Sensor Fusion}
+\author{Michael Kurmann}
+
+
+\begin{document}
+\begin{titlepage}
+	\hbox{
+			\hspace*{0.15\textwidth}
+			\rule{1pt}{\textheight}
+			\hspace*{0.05\textwidth}
+			\parbox[b]{0.75\textwidth}{
+{\scshape \large Lucerne University of Applied Science \& Architecture\par}
+\vspace{0.2cm}
+{\Huge \scshape \bfseries Seonsor Fusion on Sounding Rocket\par}
+\vspace{0.2cm}
+{\scshape \large Bachelor Thesis\par}
+\vspace{0.5cm}
+%\includegraphics[width = 0.75\textwidth]{Pictures/Titelseitebild1.png}
+%\vspace{0.5cm}
+\begin{flushleft}
+\begin{tabular}{l l}
+
+Author: & Michael Kurmann \\
+
+Supervisor: & Dr. Marcel Joss\\
+
+Expert: & \\
+
+Submission date: & 22.12.2017\\
+Classification: & Consultation
+\end{tabular}
+\end{flushleft}
+\vspace{7cm}
+
+}}
+
+\vfill
+\end{titlepage}
+
+\chapter*{Declaration}
+\thispagestyle{empty}
+Hereby, I declare that I have composed the presented paper independently on my own and without any other resources than the ones indicated. All thoughts 
+taken directly or indirectly from sources are properly denoted as such.
+This paper has neither been previously submitted to another authority nor has it been published yet.
+
+\vspace{2cm}
+Horw, \today
+
+\begin{abstract}
+\subfile{Abstract}
+\end{abstract}
+\tableofcontents
+
+
+\chapter{Introduction}
+\label{ch:Introduction}
+\subfile{Introduction}
+
+\chapter{Approach}
+\label{ch:Approach}
+\subfile{Approach}
+
+\chapter{Tests}
+\label{ch:Tests}
+\subfile{Tests}
+
+\chapter{Conclusion}
+\label{ch:Conclusion}
+\subfile{Conclusion}
+
+\bibliography{References}
+
+\begin{appendices}
+\subfile{Appendix}
+\end{appendices}
+ 
+
+
+\end{document}          
