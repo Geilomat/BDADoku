@@ -1,5 +1,9 @@
-*.kileprj
+
 ../*.pdf
 ../*.kilepr
 ../*.aux
 ../*.toc
+*.pdf
+*.kilepr
+*.aux
+*.toc
