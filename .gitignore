@@ -3,6 +3,8 @@
 ../*.kilepr
 ../*.aux
 ../*.toc
+*.new
+*.backup
 *.kilepr
 *.aux
 *.toc

@@ -2,9 +2,11 @@
 
 
  \cite{SimonDan2006Ose:}
+
  
  \section{Bla}
  About Sensor Fusion and ARIS
+ 
  
  \section{Research}
  Write about the Papers/book you used:
@@ -15,22 +17,45 @@
  \section{Problem}
  State the problem, what will be difficult ? For what is it ? where should it be improved
  
+ Problems found so far:
+ \begin{itemize}
+  \item How to calculate Height out of Pressure/Temp/Humidity Fabian ver: $44330 * (1 - (\frac{pressure}{101325})^{ \frac{1}{5.255}})$
+  \item How to integrate AirBreaks/Drag Force of Air/ Trust of Motor ?
+  \item The up-flight is rather short: about 25s so the Fusion should have a small settling time
+  \item The Chip on which it is used is no the fastes : 168 MHz clock
+  \item The Ram on the Chip is not endless: Maximal space for the Sensor fusion is about 10kB
+  \item The Sensor Fusion should be as modular as possible so that it also can be used in the next competition
+  \item The Sensor Fusion has to be as sturdy as possible so that it will not fail if a problem occurs
+  \item The Fusion should make a state Estimation as percicse as possible.
+  \item There are a lot of different variables: 3 Positions, 1 Speed, 3 Accelorations, 3 Lagen, Time, Pressure, Tempterature, Humidity, Up-/Downforce.
+  \item Especially the Input Value u which is the force onto the rocket is difficult to define (Drag, Trust = acceloration depends on wheigt which changes over time).
+  \item The different Sensor have different weaknesses: \begin{itemize}
+							 \item Accelometer: Offset, drift, weak to vibrations
+                                                         \item Gyro: Weak to Vibrations
+                                                         \item Barometer: Many uncertenties, unpercise
+                                                         \item GPS: Slow (max 5Hz)
+                                                        \end{itemize}
+                                                        
+								  
+ \end{itemize}
+
  
- \section{Requirements}
+ 
+\section{Requirements}
+These are the requirements which were drown out of the problems list.
+ 
  \begin{table}[h]
 \centering
-
 \begin{tabular}{|l|l|l|l|}
 \hline
-Requirement   & \multicolumn{1}{c|}{Range} & Importance &  \\ \hline
-Precision     &                            & High       &  \\ \hline
-Sturdiness    & Has to function every time  & Critical   &  \\ \hline
-Code Size     & max 10 kB                  & High	&  \\ \hline
-System Load   & max 1 ms		   & Critical	&  \\ \hline
-Non Linearity & As few as possible         & Desirable &  \\ \hline
-Complexity    &                            & Medium     &  \\ \hline
-Settling time &                            & High       &  \\ \hline
-Modularity    & As Modular as possible     & Medium     &  \\ \hline
+Requirement   & \multicolumn{1}{c|}{Rating} & Aim & Importance \\ \hline
+Precision     & Error between estimation and groundtruth  & < 5\% after settling time & High  \\ \hline
+Sturdiness    & \% Percision without \# sensors  & -10\% per failed sensor  & Medium \\ \hline
+Code Size     & kB of RAM needed  & < 10kB size & High \\ \hline
+System Load   & Time per loop on the cuurent Chip (128 MHz) & < 1ms & Crictal \\ \hline
+Non Linearity & \# non linearities in the algortihm  & 0 &  Desirable\\ \hline
+Settling time & Time from ignition to optimal estimation  & < 5s       &  Critical\\ \hline
+Modularity    & Effort needed to integrate a new sensor    & < 10h work     &  Desirable\\ \hline
               &                            &            &  \\ \hline
               &                            &            &  \\ \hline
               &                            &            &  \\ \hline
