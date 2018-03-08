@@ -3,7 +3,11 @@
 ../*.kilepr
 ../*.aux
 ../*.toc
-*.pdf
 *.kilepr
 *.aux
 *.toc
+*.out
+*.log
+*.gz
+*.bbl
+*.blg
