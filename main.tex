@@ -22,16 +22,20 @@
 \usepackage{listings}
 \usepackage{subcaption}
 \usepackage[toc,page]{appendix}
+\usepackage{natbib}
 
 \setlength{\headheight}{30pt}
 \bibliographystyle{apalike}
+\newcommand\NEVERRUNME{
+    \bibliography{References.bib}
+}
 
 
 % Fuss und Kopfzeile neu Definieren
 \fancypagestyle{plain}{%
 \fancyhf{} %alle Kopf- und Fußzeilenfelder bereinigen
-\fancyfoot[OR]{\thepage} %Seitennummer
-\fancyfoot[EL]{\thepage}
+\fancyfoot[R]{\thepage} %Seitennummer
+%\fancyfoot[EL]{\thepage}
 \fancyhead[L]{Bachelor Thesis}
 \fancyhead[R]{Michael Kurmann}}
 
@@ -55,31 +59,40 @@
 			\parbox[b]{0.75\textwidth}{
 {\scshape \large Lucerne University of Applied Science \& Architecture\par}
 \vspace{0.2cm}
-{\Huge \scshape \bfseries Seonsor Fusion on Sounding Rocket\par}
+{\Huge \scshape \bfseries ARIS - Data Fusion for a Sounding Rocket\par}
 \vspace{0.2cm}
 {\scshape \large Bachelor Thesis\par}
 \vspace{0.5cm}
-%\includegraphics[width = 0.75\textwidth]{Pictures/Titelseitebild1.png}
+\begin{center}
+ \includegraphics[height = 10cm]{Pictures/Fusion.jpg}
+\end{center}
+
+
+
 %\vspace{0.5cm}
 \begin{flushleft}
 \begin{tabular}{l l}
 
 Author: & Michael Kurmann \\
 
-Supervisor: & Dr. Marcel Joss\\
+Supervisor: & Prof. Marcel Joss\\
 
-Expert: & \\
+Expert: & Werner Scheidegger\\
+
+Industrial Partner: & ARIS (Akademische Raumfahrt Initiative Schweiz) \\
+		    & Oliver Kirchhoff\\
 
 Submission date: & 22.12.2017\\
-Classification: & Consultation
+Classification: & Access
 \end{tabular}
 \end{flushleft}
-\vspace{7cm}
+\vspace{3cm}
 
 }}
 
 \vfill
 \end{titlepage}
+
 
 \chapter*{Declaration}
 \thispagestyle{empty}
@@ -91,31 +104,30 @@ This paper has neither been previously submitted to another authority nor has it
 Horw, \today
 
 \begin{abstract}
-\subfile{Abstract}
+\input{Abstract}
 \end{abstract}
 \tableofcontents
 
-
 \chapter{Introduction}
 \label{ch:Introduction}
-\subfile{Introduction}
+\input{Introduction}
 
 \chapter{Approach}
 \label{ch:Approach}
-\subfile{Approach}
+\input{Approach}
 
 \chapter{Tests}
 \label{ch:Tests}
-\subfile{Tests}
+\input{Tests}
 
 \chapter{Conclusion}
 \label{ch:Conclusion}
-\subfile{Conclusion}
+\input{Conclusion}
 
 \bibliography{References}
 
 \begin{appendices}
-\subfile{Appendix}
+\input{Appendix}
 \end{appendices}
  
 
