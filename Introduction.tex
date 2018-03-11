@@ -17,15 +17,17 @@
  
  Problems found so far:
  \begin{itemize}
-  \item How to calculate Height out of Pressure/Temp/Humidity Fabian ver: $44330 * (1 - (\frac{pressure}{101325})^{ \frac{1}{5.255}})$
-  \item How to integrate AirBreaks/Drag Force of Air/ Trust of Motor ?
+  \item How to calculate Height out of Pressure/Temp/Humidity Fabian version: $44330 * (1 - (\frac{pressure}{101325})^{ \frac{1}{5.255}})$
+  \item How to parameterize the different sensors (Measuring, Test Flight, Data Sheet ) ? 
+  \item How to fuse together Data from Sensors that have different Taus, especially those who are slower than the Loop-Time ?
+  \item How to integrate AirBreaks/Drag Force of Air/ Trust of Motor a input value?
   \item What are the different noise factors and when do they occur ?
-  \item The up-flight is rather short: about 25s so the Fusion should have a small settling time
-  \item The Chip on which it is used is no the fastes : 168 MHz clock
+  \item The up-flight is rather short: about 25 seconds, so the Fusion should have a small settling time
+  \item The Micro-Chip on which it is used is no the fastest : 168 MHz clock
   \item The Ram on the Chip is not endless: Maximal space for the Sensor fusion is about 10kB
   \item The Sensor Fusion should be as modular as possible so that it also can be used in the next competition
   \item The Sensor Fusion has to be as sturdy as possible so that it will not fail if a problem occurs
-  \item The Fusion should make a state Estimation as percicse as possible.
+  \item The Fusion should make a state Estimation as precise as possible.
   \item There are a lot of different variables: 3 Positions, 1 Speed, 3 Accelerations, 3 Lagen, Time, Pressure, Tempterature, Humidity, Up-/Downforce.
   \item Especially the Input Value u which is the force onto the rocket is difficult to define (Drag, Trust = acceloration depends on wheigt which changes over time).
   \item The different Sensor have different weaknesses: \begin{itemize}
@@ -47,14 +49,13 @@ These are the requirements which were drown out of the problems list.
 \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
-Requirement   & \multicolumn{1}{c|}{Rating} & Aim & Importance \\ \hline
+\bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Importance} \\ \hline
 Precision     & Error between estimation and ground truth  & < 5\% after settling time & High  \\ \hline
-Sturdiness    & \% Precision without \# sensors  & -10\% per failed sensor  & Medium \\ \hline
-Code Size     & kB of RAM needed  & < 10kB size & High \\ \hline
-System Load   & Time per loop on the current Chip (128 MHz) & < 1ms & Critical \\ \hline
-Non Linearity & \# non linearities in the algorithm  & 0 &  Desirable\\ \hline
-Settling time & Time from ignition to optimal estimation  & < 5s       &  Critical\\ \hline
-Modularity    & Effort needed to integrate a new sensor    & < 10h work     &  Desirable\\ \hline
+Reliability   & Functioning State Estimation with \# failed sensors & functions with 2-3 failed sensors & Medium \\ \hline
+System Load   & \# Calculation steps per loop & < 1000 & Critical \\ \hline
+Non Linearity & \# non linearity's in the algorithm  & 0 &  Desirable\\ \hline
+Settling time & Time from ignition to optimal estimation  & < 5 s       &  Critical\\ \hline
+Modularity    & Effort needed to integrate a new sensor    & < 10 h work     &  Desirable\\ \hline
               &                            &            &  \\ \hline
               &                            &            &  \\ \hline
               &                            &            &  \\ \hline
@@ -63,6 +64,6 @@ Modularity    & Effort needed to integrate a new sensor    & < 10h work     &  D
 \label{tab:Requirements}
 \end{table}
  
- \section{Desired Solution}
+\section{Desired Solution}
  
- Describe in quick terms what you are aiming for.
+Describe in quick terms what you are aiming for.
