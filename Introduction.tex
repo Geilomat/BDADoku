@@ -1,16 +1,30 @@
 
- \cite{SimonDan2006Ose:}
 
+ Here comes the Introduction what is Aris what are the aims and why is a Data/Sensor fusion needed? 
  
- \section{Bla}
- About Sensor Fusion and ARIS
+ The Academic Space Initiative Switzerland (ARIS) is student group which tries too compete in the yearly Intercollegiate Rocket Engineering Competition (IREC).
+ To aim for the right apogee (3000 m) a Control algorithm is implemented. This algorithm relays on the information of different sensors to determine the rockets actual state.
+ Cause there are different sensors to measure the same value a algorithm which fuses those data would come in handy.
+ With this fusion algorithm it should also be possible to be more accurate as with each sensor on its own.
+ For this the problem as well as the desired solution will be defined in this chapter.
+ After that the dynamics of the rocket as well as the parameter of the different Sensors are defined at beginning of chapter \ref{ch:Approach}, the most suited algorithm will be chosen.
+ Chapter \ref{ch:Implementation} will then describe how this fusion algorithm implemented in a simulation in detail.
+ To verify that the implementation is working as intended, the fused data will be held against the ground truth which are provided from this years test flights in chapter \ref{ch:Tests}.
+ In the last chapter \ref{ch:Conclusion} a summary of the achieved knowledge will be stated.
+ The purpose of this thesis is to find and implement the algorithm which is most suitable for this task.
  
- 
+ \section{Purpose}
+ The hardware as well as the most of the software parts that will be used for this competition is already defined.
+ Also it is a suitable assumption that the sensors and the dynamics of the rocket will be stay more or less the same for the competitions coming.
+ Therefore this thesis will mainly focus on finding a algorithm for this given surroundings, but it is also will try to find as modular solution as possible, so that achieved knowledge can be used in further competition.
+  
  \section{Research}
  Write about the Papers/book you used:
  Kalman-filter
  Optimal state estimation
  The Master Thesis
+ Sensor/data fusion is an engineering field since the first rocket flights. Therefore there is already a lot of previous work which can be used in this thesis.
+ 
  
  \section{Problem}
  State the problem, what will be difficult ? For what is it ? where should it be improved
@@ -50,15 +64,13 @@ These are the requirements which were drown out of the problems list.
 \begin{tabular}{|l|l|l|l|}
 \hline
 \bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Importance} \\ \hline
-Precision     & Error between estimation and ground truth  & < 5\% after settling time & High  \\ \hline
-Reliability   & Functioning State Estimation with \# failed sensors & functions with 2-3 failed sensors & Medium \\ \hline
+Precision     & Error between estimation and ground truth  & < 2m in Z & High  \\ \hline
+Reliability   & Functioning Estimation with \#failed sensors & Functions without 2-3 sensors & Medium \\ \hline
 System Load   & \# Calculation steps per loop & < 1000 & Critical \\ \hline
 Non Linearity & \# non linearity's in the algorithm  & 0 &  Desirable\\ \hline
-Settling time & Time from ignition to optimal estimation  & < 5 s       &  Critical\\ \hline
-Modularity    & Effort needed to integrate a new sensor    & < 10 h work     &  Desirable\\ \hline
-              &                            &            &  \\ \hline
-              &                            &            &  \\ \hline
-              &                            &            &  \\ \hline
+Settling time & Time from ignition to optimal estimation  & < 5 s &  Critical\\ \hline
+Modularity    & Effort needed to change a sensors & < 10 h work &  Desirable\\ \hline
+
 \end{tabular}
 \caption{Requirements table}
 \label{tab:Requirements}
