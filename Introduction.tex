@@ -16,7 +16,8 @@
  \section{Purpose}
  The hardware as well as the most of the software parts that will be used for this competition is already defined.
  Also it is a suitable assumption that the sensors and the dynamics of the rocket will be stay more or less the same for the competitions coming.
- Therefore this thesis will mainly focus on finding a algorithm for this given surroundings, but it is also will try to find as modular solution as possible, so that achieved knowledge can be used in further competition.
+ Therefore this thesis will mainly focus on finding a algorithm for this given surroundings, but it is also will try to find as modular solution as possible, 
+ so that achieved knowledge can be used in further competition.
   
  \section{Research}
  Write about the Papers/book you used:
@@ -26,8 +27,24 @@
  Sensor/data fusion is an engineering field since the first rocket flights. Therefore there is already a lot of previous work which can be used in this thesis.
  
  
- \section{Problem}
- State the problem, what will be difficult ? For what is it ? where should it be improved
+ \section{Problems}
+ 
+ Out of the research and the previous competition, different problems appeared that need to be addressed in this thesis to ensure a good solution as possible.
+ 
+ \subsection{Different Sensors}
+ First of all there are different sensors which all do measure different values and have different parameters (precision, sampling time).
+ So the algorithm has to be play out the strength of the different sensors to uneplay their individual weaknesses.
+ Additionally, because this algorithm is system critical, it has to be reliable enough that it still is working properly if sensors failing. 
+ \subsection{System Load}
+ The cycling time will be around 1 ms on a embedded system. This time was chosen on the behalf that it would be difficult to get the exact needed cycling time on ensure the needed controlability of the rockets apogee.
+ Therefore the system load that the algorithm can cause, has to be strongly limited, so that it can be run on this given system. 
+ The system this year is an 32 bit Arm Processor which runs on 168 MHz, assumed that the algorithm has at maximum the half of a software cycle, the maximum given clock cycles are around 84 000.
+ This number should not change in great manner over the next competitions.
+ \subsection{Precision}
+ asdasjh
+ \subsection{Modularity}
+ Although it can be assumed that they will stay more or less they same over the next competitions, it is not ensured that exactly this sensors will be used.
+ Therefore the presented algorithm should provide the possibility to exchange the sensors, as long as they resemble the old sensor in a feasible way.
  
  Problems found so far:
  \begin{itemize}
@@ -53,29 +70,31 @@
                                                         
 								  
  \end{itemize}
-
- \cite{}
  
-\section{Requirements}
-These are the requirements which were drown out of the problems list.
+ \section{Requirements}
+ These are the requirements which were drown out of the problems list.
  
  \begin{table}[h]
-\centering
-\begin{tabular}{|l|l|l|l|}
-\hline
-\bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Importance} \\ \hline
-Precision     & Error between estimation and ground truth  & < 2m in Z & High  \\ \hline
-Reliability   & Functioning Estimation with \#failed sensors & Functions without 2-3 sensors & Medium \\ \hline
-System Load   & \# Calculation steps per loop & < 1000 & Critical \\ \hline
-Non Linearity & \# non linearity's in the algorithm  & 0 &  Desirable\\ \hline
-Settling time & Time from ignition to optimal estimation  & < 5 s &  Critical\\ \hline
-Modularity    & Effort needed to change a sensors & < 10 h work &  Desirable\\ \hline
-
-\end{tabular}
-\caption{Requirements table}
-\label{tab:Requirements}
-\end{table}
+ \centering
+ \begin{tabular}{|l|l|l|l|}	
+ \hline	
+ \bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Importance} \\ \hline
+ Precision     & Error between estimation and ground truth  & < 2m in Z & High  \\ \hline
+ Reliability   & Functioning Estimation with \#failed sensors & 2-3 sensors & Medium \\ \hline	
+ System Load   & \# Calculation steps per loop & < 1000 & Critical \\ \hline
+ Settling time & Time from first reliable to optimal estimation  & < 1 s &  High \\ \hline
+ Modularity    & Effort needed to change a sensors & < 10 h work &  Desirable \\ \hline
+ \end{tabular}	
+ \caption{Requirements table}
+ \label{tab:Requirements}
+ \end{table}
  
-\section{Desired Solution}
- 
-Describe in quick terms what you are aiming for.
+ As seen in the table \ref{tab:Requirements} five requirements were drown out of the problem analysis. 
+ First of all, there is critical requirement the system load. This is given as critical cause it is needed that the algorithm is small enough to be run on a embedded system.
+ Any solution that would not fit this requirement would be pointless in the frame of this thesis.
+ Secondly there are two requirements which are tied together, the precision and settling time.
+ Where the precision describes what a optimal estimation is under the context of this thesis, the settling time relies on this to be defined.
+ The desired precision will be needed to ensure a possible good control.
+ \section{Desired Solution}
+ The desired solution should met the given requirements as optimal as possible. While doing this it should also not be more complicated than needed
+ to make a future use as easy as possible. Cause of this the modularity is an important requirement to ensure this.
