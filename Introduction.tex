@@ -35,16 +35,33 @@
  First of all there are different sensors which all do measure different values and have different parameters (precision, sampling time).
  So the algorithm has to be play out the strength of the different sensors to uneplay their individual weaknesses.
  Additionally, because this algorithm is system critical, it has to be reliable enough that it still is working properly if sensors failing. 
+ 
+ 
  \subsection{System Load}
  The cycling time will be around 1 ms on a embedded system. This time was chosen on the behalf that it would be difficult to get the exact needed cycling time on ensure the needed controlability of the rockets apogee.
  Therefore the system load that the algorithm can cause, has to be strongly limited, so that it can be run on this given system. 
  The system this year is an 32 bit Arm Processor which runs on 168 MHz, assumed that the algorithm has at maximum the half of a software cycle, the maximum given clock cycles are around 84 000.
  This number should not change in great manner over the next competitions.
+ 
  \subsection{Precision}
- asdasjh
+ The Precision is after the system load the most critical attribute, if the algorithm does not get into the required accuracy the whole thing is more or less for nothing.
+ The Control stated that the maximal error between the estimated and ground truth height should not exceed two meter. This accuracy is needed to proper control the aim of the apogee.
+ 
+ \subsection{Settling Time}
+ The settling time defines the time span when the first reliable measurements arrive after burnout until the estimation is into the required precision.
+ This time span has to be small enough to ensure that the controlling has enough time to aim for the desired apogee. In the current system the burnout occurs 
+ occurs around 3-3.5 seconds after ignition, whereas the whole flight upwards only takes around 23 seconds. Therefore the settling time needs to be around just
+ one second so that the control has as much time as possible for the controlling.
+ 
+ \subsection{Reliability}
+ Due to given surroundings that come if a sensor package is placed into a rocket, the assumption has to be made that it will be possible that sensors fail in execution.
+ Therefore the algorithm should provide the reliability of still working in a proper manner with some sensors failed. So that the execution of the controlling software
+ in terms of functionality, but locally it has not to be as accurate as it would be with all sensors working.
+
  \subsection{Modularity}
  Although it can be assumed that they will stay more or less they same over the next competitions, it is not ensured that exactly this sensors will be used.
  Therefore the presented algorithm should provide the possibility to exchange the sensors, as long as they resemble the old sensor in a feasible way.
+ This will ensure a long term use of the provided algorithm.
  
  Problems found so far:
  \begin{itemize}
@@ -72,17 +89,16 @@
  \end{itemize}
  
  \section{Requirements}
- These are the requirements which were drown out of the problems list.
  
  \begin{table}[h]
  \centering
  \begin{tabular}{|l|l|l|l|}	
  \hline	
  \bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Importance} \\ \hline
- Precision     & Error between estimation and ground truth  & < 2m in Z & High  \\ \hline
- Reliability   & Functioning Estimation with \#failed sensors & 2-3 sensors & Medium \\ \hline	
  System Load   & \# Calculation steps per loop & < 1000 & Critical \\ \hline
+ Precision     & Error between estimation and ground truth  & < 2m in Z & High  \\ \hline
  Settling time & Time from first reliable to optimal estimation  & < 1 s &  High \\ \hline
+ Reliability   & Functioning Estimation with \#failed sensors & 2-3 sensors & Medium \\ \hline	
  Modularity    & Effort needed to change a sensors & < 10 h work &  Desirable \\ \hline
  \end{tabular}	
  \caption{Requirements table}
