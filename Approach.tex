@@ -1,9 +1,12 @@
 
   How I want to get to the Solution and why I choosed it also how it works.
+  Also there should be some theory about state estimation and the kalmanfilter used
+  in this
   
-  \section{Tipps}
+  \section{Tipps/Notes}
   - Don't forget point of origin / reference system
   - Don't forget the pitch angle
+  Maybe do rocket model here
  
   
   \subsection{Barometer}
@@ -17,9 +20,65 @@
   I will use kalman filter with time depending system and sensor noise, but i have yet to define how i do this in peticullar.
   I should also make some pictures and such things.
   
-  \section{Choosing}
-  Why i choosed Kalman Filter
+  There are many possibilities to do sensor fusion. first of all an all new algorithm could be developed which accesses the 
+  stated problems directly. While this solution would be preferebal regarding the efficency, the 
+  time ad knowledge needed for this task would exceed the resoursces given in this thesis by far.
+  Also as stated in chapter \ref{ch:Introduction} a lot of theoretical as well as practical pre work is
+  already done and therefore should be used. 
   
+  \subsection{Kalmanfilter}
+  The discrete Kalmanfilter was first introduced by Kalman in the year 1960.
+  Its structure provides the optimal estimation of the standard deviation estimation error as long as the noise is Gaussian.
+  But there lies the problem, a physical system is most often not linear.
+  Also the estimated system as well as its variances over the time have to be known to provide this optimal estimation.
+  If the noise matrices of the system are static, the filters gain matrices aim for a fix value and can therefore be calculated in beforehand.
+  This reduces the computational effort by a significant amount. \cite{DavidWSchultz2004}.
+  It should be mentioned that even if the noise is not Gaussian, the kalmanfilter is still the best
+  linear estimator as long as the system and its properties are well known \cite{SimonDan2006Ose:}.
+  
+  \subsection{ROSE}
+  The ROSE(rapid ongoing stochastic estimator) is in simple terms three kalman filters in one.
+  Where the main filter is used as stated above, the additional two are used to estimated the 
+  the system noise as well as the measuring noise. Therefore this sensor preforms better than the traditional kalman filter
+  if those noises change over time in a not known fashion and has therefore be estimated.
+  Due to this, this sensor needs more computational effort \cite{DavidWSchultz2004}. 
+  
+  \subsection{Extended Kalmanfilter}
+  The extended kalmanfilter provides additional parts to better access nonlinearity in the observed system.
+  This by not estimating the state of the system but by estimating the linearized change of the state 
+  to the past sate. For this the systems equations have to be derived around the current working point in every estimation state.
+  Therefore the computational effort exceeds even further \cite{SimonDan2006Ose:}.
+  
+  \subsection{Unscented Kalamnfilter}
+  The unscented kalmanfilter 
+  
+  \subsection{H$\infty$ filter}
+  The H$\infty$ filter is a more diverse approach then the ones described above.
+  It was developed to access the problem when the to be observed system espacially its noise is not well known.
+  Also in contrast to the kalman filters the H$\infty$ filter minimizes the worst-case estimation error 
+  in stand of the standard deviation of the estimation error.
+  
+  \section{Choosing}
+  If the requirements table \ref{tab:Requirements} is taken into the consideration of finding
+  the optimal solution, two main requirements occur that define this desition.
+  First the system load is a critical requirements and has therefore to be addressed in this process.
+  Also for the requirement of modularity the algorithm should be as simple as possible.
+  If taken in regard that the system is more or less well known and that the noise can be
+  determened with the simulation and the log data from previous test flights,
+  a normal kalmanfilter seems to be the most fitting solution.
+  This because the performance of the rocket and the sensor should stay the same during
+  each flight. 
+  
+  \section{System}
+  The developed system or how you want to call it it doesn't really matter.
+  will be hold simple to reduce the system load as well as prevent nonlinearities.
+  Also the important values to estimate are at first hand the vertical height and speed, so
+  for a first implementation just variables that can bed used do determine those both will be used.
+  This are mainly the height and speed from the GPS, the vertical acceloration from the accelorometer
+  as well as the pressure and temperature from the pressure sensors.
+  
+  
+  describe here how the system desciption looks in perticular 
   \section{Explenation}
   How it 'should' work in detail
   
