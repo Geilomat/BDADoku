@@ -8,10 +8,23 @@ produced an how it resembles the real data.
 \section{Sensor Model}
 How do i model the different sensors to mimic the real sensors as good as possible.
 
-\subsection{Accelorometer}
-\subsection{Gyrometer}
-\subsection{Pressure}
 \subsection{GPS}
+\subsubsection{Perfect Signal}
+The perfect GPS signal is rather simple to generate out of the trajectory. For this, just the sampling time has to be adjust.
+A suitable sampling rate would be between 0.5 and 2 Hz. To maintain the vectors length which simplifies the later use in the estimation algortihm,
+the signal is aquired with a zero order hold convertion like this:
+
+% Add code for the zero order Holde convertion
+
+\subsubsection{Noise}
+The noise capacites of GPS is not real white. It more resembles a brown noise because it has a slow ocsillation over it.
+I have to determine how i will remodel this in perticular.
+
+\subsubsection{Real Signal}
+\subsection{Accelorometer}
+
+\subsection{Gyrometer}
+\subsection{Barometer}
 
 \section{System Model}
 6*6 with moving point mass and temperature.

@@ -34,15 +34,18 @@
  
  
  The Academic Space Initiative Switzerland (ARIS) is student group which tries too compete in the yearly Intercollegiate Rocket Engineering Competition (IREC).
+ The goal of this competition is to build a rocket which can fly autonomus at a predefined apogee (10000 feet).
+ 
  To aim for the right apogee (3000 m) a Control algorithm is implemented. This algorithm relays on the information of different sensors to determine the rockets actual state.
  Cause there are different sensors to measure the same value a algorithm which fuses those data would come in handy.
  With this fusion algorithm it should also be possible to be more accurate as with each sensor on its own.
  For this the problem as well as the desired solution will be defined in this chapter.
+ The purpose of this thesis is to find and implement the algorithm which is most suitable for this task.
  After that the dynamics of the rocket as well as the parameter of the different Sensors are defined at beginning of chapter \ref{ch:Approach}, the most suited algorithm will be chosen.
  Chapter \ref{ch:Implementation} will then describe how this fusion algorithm implemented in a simulation in detail.
  To verify that the implementation is working as intended, the fused data will be held against the ground truth which are provided from this years test flights in chapter \ref{ch:Tests}.
  In the last chapter \ref{ch:Conclusion} a summary of the achieved knowledge will be stated.
- The purpose of this thesis is to find and implement the algorithm which is most suitable for this task.
+
  
  \section{Purpose}
  The hardware as well as the most of the software parts that will be used for this competition is already defined.
@@ -62,23 +65,30 @@
  
  
  \section{Sensors}
+ \begin{figure}[h!]
+  \centering
+  \includegraphics[width = \textwidth]{../BDADoku/Pictures/SensorNetworkAlt.pdf}
+  \caption{Sensor Network}
+  \label{fig:SensorNetwork}
+ \end{figure}
+
  As mentioned above different sensors are used in this years competition.
  This used sensors and their settings will be described in this chapter.
  
- \subsection{Accelorometer}
- First of all, comes the accelorometer. This is a well established and widely used sensor. It measures the acceloration that do force on the sensor in the three
- space dimensions. This years accelorometer is adxl357 which will be sampled at 1000 Hz. It has an accuracy of bla meters per seconds squared. 
+ \subsection{Accelerometer}
+ First of all, comes the accelerometer. This is a well established and widely used sensor. It measures the acceleration that do force on the sensor in the three
+ space dimensions. This years accelerometer is adxl357 which will be sampled at 1000 Hz. It has an accuracy of bla meters per seconds squared. 
  
  \subsection{Gyrometer}
  The Gyrometer is needed to measure the posture of the Rocket. This is espacially needed to determine if the rocket has a pitch angle. If so the pure
- acceloration on the z-axis can be calculated. The used gyrometer is ITG-3701.
+ acceleration on the z-axis can be calculated. The used gyrometer is ITG-3701.
  
  \subsection{Barometers}
- Barometers are widely used in blabla, cause with a common pressure model the height can be calculated out of the measurements that the pressure sensor takes.
+ Barometers are widely used in aviation, cause with a common pressure model the height can be calculated out of the measurements that the barometer takes.
  In this years competition three barometers are used. This are by name 2SMPB-02E and LPS22HBTR. They will be used with a sampling rate 100Hz and 50Hz.
  
  \subsection{Temperature}
- The temperature is maybe needed to make the height out of the barometer better because the used pressure model consists out of changing in height and temperature.
+ The temperature is maybe needed to make the height out of the barometer better because most of the atmospheric model depend on the pressure as well as the temperature.
  This temperature will be provided by the different barometers which each posses a separate temperature sensor. 
  
  \subsection{GPS}
@@ -88,11 +98,11 @@
  
  
  \section{Problems}
- Out of the research and the previous competition, different problems appeared that need to be addressed in this thesis to ensure a good solution as possible.
+ Out of the research and the previous competition, different problems appeared that need to be addressed in this thesis to ensure an as good solution as possible.
  
  \subsection{Different Sensors}
  First of all there are different sensors which all do measure different values and have different parameters (precision, sampling time).
- So the algorithm has to be play out the strength of the different sensors to uneplay their individual weaknesses.
+ So the algorithm has to use out the strengths of the different sensors to cancel out their individual weaknesses.
  Additionally, because this algorithm is system critical, it has to be reliable enough that it still is working properly if sensors failing. 
  
  \subsection{System Load}
@@ -117,11 +127,9 @@
  in terms of functionality, but locally it has not to be as accurate as it would be with all sensors working.
 
  \subsection{Modularity}
- Although it can be assumed that they will stay more or less they same over the next competitions, it is not ensured that exactly this sensors will be used.
+ Although it can be assumed that the sensors will stay more or less they same over the next competitions, it is not ensured that exactly this sensors will be used.
  Therefore the presented algorithm should provide the possibility to exchange the sensors, as long as they resemble the old sensor in a feasible way.
  This will ensure a long term use of the provided algorithm.
- 
- 
  
  \section{Requirements}
  
@@ -130,7 +138,7 @@
  \begin{tabular}{|l|l|l|l|}	
  \hline	
  \bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Importance} \\ \hline
- System Load   & \# Calculation steps per loop & < 1000 & Critical \\ \hline
+ System Load   & \# Calculation steps per loop & < 5000 & Critical \\ \hline
  Precision     & Error between estimation and ground truth  & < 2m in Z & High  \\ \hline
  Settling time & Time from first reliable to optimal estimation  & < 1 s &  High \\ \hline
  Reliability   & Functioning Estimation with \#failed sensors & 2-3 sensors & Medium \\ \hline	
