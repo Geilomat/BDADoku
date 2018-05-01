@@ -1,50 +1,59 @@
 
- \section{Tipps/Notes}
- Pictures for what:
- Aris logo ? 
- Atmospheric model ? 
- Different sensors ? 
- Sensor Network
+%\section{Tipps/Notes}
+%  Pictures for what:
+%  Aris logo ? 
+%  Atmospheric model ? 
+%  Different sensors ? 
+%  Sensor Network
+%  
+%  
+%  Problems found so far:
+%  \begin{itemize}
+%   \item How to calculate Height out of Pressure/Temp/Humidity Fabian version: $44330 * (1 - (\frac{pressure}{101325})^{ \frac{1}{5.255}})$
+%   \item How to parameterize the different sensors (Measuring, Test Flight, Data Sheet ) ? 
+%   \item How to fuse together Data from Sensors that have different Taus, especially those who are slower than the Loop-Time ?
+%   \item How to integrate AirBreaks/Drag Force of Air/ Trust of Motor a input value?
+%   \item What are the different noise factors and when do they occur ?
+%   \item The up-flight is rather short: about 25 seconds, so the Fusion should have a small settling time
+%   \item The Micro-Chip on which it is used is no the fastest : 168 MHz clock
+%   \item The Ram on the Chip is not endless: Maximal space for the Sensor fusion is about 10kB
+%   \item The Sensor Fusion should be as modular as possible so that it also can be used in the next competition
+%   \item The Sensor Fusion has to be as sturdy as possible so that it will not fail if a problem occurs
+%   \item The Fusion should make a state Estimation as precise as possible.
+%   \item There are a lot of different variables: 3 Positions, 1 Speed, 3 Accelerations, 3 Lagen, Time, Pressure, Tempterature, Humidity, Up-/Downforce.
+%   \item Especially the Input Value u which is the force onto the rocket is difficult to define (Drag, Trust = acceloration depends on wheigt which changes over time).
+%   \item The different Sensor have different weaknesses: \begin{itemize}
+% 							 \item Accelerometer: Offset, drift, weak to vibrations
+%                                                          \item Gyro: Weak to Vibrations
+%                                                          \item Barometer: Many uncertenties, unpercise
+%                                                          \item GPS: Slow (max 5Hz)
+%                                                         \end{itemize}
+%                                                         
+% 								  
+%  \end{itemize}
  
- 
- Problems found so far:
- \begin{itemize}
-  \item How to calculate Height out of Pressure/Temp/Humidity Fabian version: $44330 * (1 - (\frac{pressure}{101325})^{ \frac{1}{5.255}})$
-  \item How to parameterize the different sensors (Measuring, Test Flight, Data Sheet ) ? 
-  \item How to fuse together Data from Sensors that have different Taus, especially those who are slower than the Loop-Time ?
-  \item How to integrate AirBreaks/Drag Force of Air/ Trust of Motor a input value?
-  \item What are the different noise factors and when do they occur ?
-  \item The up-flight is rather short: about 25 seconds, so the Fusion should have a small settling time
-  \item The Micro-Chip on which it is used is no the fastest : 168 MHz clock
-  \item The Ram on the Chip is not endless: Maximal space for the Sensor fusion is about 10kB
-  \item The Sensor Fusion should be as modular as possible so that it also can be used in the next competition
-  \item The Sensor Fusion has to be as sturdy as possible so that it will not fail if a problem occurs
-  \item The Fusion should make a state Estimation as precise as possible.
-  \item There are a lot of different variables: 3 Positions, 1 Speed, 3 Accelerations, 3 Lagen, Time, Pressure, Tempterature, Humidity, Up-/Downforce.
-  \item Especially the Input Value u which is the force onto the rocket is difficult to define (Drag, Trust = acceloration depends on wheigt which changes over time).
-  \item The different Sensor have different weaknesses: \begin{itemize}
-							 \item Accelerometer: Offset, drift, weak to vibrations
-                                                         \item Gyro: Weak to Vibrations
-                                                         \item Barometer: Many uncertenties, unpercise
-                                                         \item GPS: Slow (max 5Hz)
-                                                        \end{itemize}
-                                                        
-								  
- \end{itemize}
- 
- 
- The Academic Space Initiative Switzerland (ARIS) is student group which tries too compete in the yearly Intercollegiate Rocket Engineering Competition (IREC).
- The goal of this competition is to build a rocket which can fly autonomus at a predefined apogee (10000 feet).
- 
- To aim for the right apogee (3000 m) a Control algorithm is implemented. This algorithm relays on the information of different sensors to determine the rockets actual state.
+ \begin{figure}[h!]
+ \centering
+ \includegraphics[width=0.2\textwidth]{./Pictures/ARIS_TELL_Badge.png}
+ % ARIS_TELL_Badge.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Official logo of the competition project 2018}
+ \label{fig:ArisTell}
+\end{figure}
+
+ The Academic Space Initiative Switzerland (ARIS) figure:\ref{fig:ArisTell} is a student group which tries too compete in the yearly Intercollegiate Rocket Engineering Competition (IREC).
+ The goal of this competition is to build a rocket which can fly autonomous at a predefined apogee (10000 feet).
+ The competitors are graded by the documentation about the project, how much of the parts they engineered/produced itself and how precises the apogee was hit. \\
+ To aim for the right apogee a Control algorithm is implemented. 
+ This algorithm relays on the information of different sensors to determine the rockets actual state.
  Cause there are different sensors to measure the same value a algorithm which fuses those data would come in handy.
  With this fusion algorithm it should also be possible to be more accurate as with each sensor on its own.
+ The purpose of this thesis is to implement a simulation and with its help find the algorithm which is most suitable for this task.\\
  For this the problem as well as the desired solution will be defined in this chapter.
- The purpose of this thesis is to find and implement the algorithm which is most suitable for this task.
- After that the dynamics of the rocket as well as the parameter of the different Sensors are defined at beginning of chapter \ref{ch:Approach}, the most suited algorithm will be chosen.
- Chapter \ref{ch:Implementation} will then describe how this fusion algorithm implemented in a simulation in detail.
- To verify that the implementation is working as intended, the fused data will be held against the ground truth which are provided from this years test flights in chapter \ref{ch:Tests}.
- In the last chapter \ref{ch:Conclusion} a summary of the achieved knowledge will be stated.
+ After that the models for the different sensor that will be used as well as the pro and con of different state estimators are discussed at beginning of chapter \ref{ch:Approach}.
+ In addition, different possible system models are also described in this chapter.
+ Chapter \ref{ch:Implementation} will then show, how the simulation and the fusion algorithm are implemented in detail.
+ To verify that the implementation is working as intended, the results of the simulation are discussed in chapter \ref{ch:Tests}.
+ In the last chapter \ref{ch:Conclusion} a summary of the achieved knowledge, as well as a comparison between the desired and the implemented solution will be stated.
 
  
  \section{Purpose}
@@ -54,11 +63,12 @@
  so that achieved knowledge can be used in further competition.
   
  \section{Research}
- Sensor/data fusion and state estimation is an well established engineering field.
+ Sensor/data fusion and state estimation is a well established engineering field.
+ Especially since the 1960 when Rudolf A Kalman published his paper for the Kalman filter.
  Therefore there is already a lot of previous work which can be used in this thesis.
  For this thesis two books are used which provide the needed theory, this are by name
  \cite{DavidWSchultz2004} which contains basic theory about kalman filters. The second book
- \cite{SimonDan2006Ose:} contains more about different approaches of state estimation and
+ \cite{SimonDan2006Ose:} is more focused on different approaches of state estimation and
  provides also different solution to common problems that occur while implementing a state estimation.
  In addition the Master Thesis \cite{BryanTongMinh2012} accesses more ore less the same issue as this thesis.
  Therefore it will be used mainly in the conceptional part of this paper.
@@ -75,21 +85,29 @@
  As mentioned above different sensors are used in this years competition.
  This used sensors and their settings will be described in this chapter.
  
+ %% Maybe add pictures of the different sensors 
  \subsection{Accelerometer}
- First of all, comes the accelerometer. This is a well established and widely used sensor. It measures the acceleration that do force on the sensor in the three
- space dimensions. This years accelerometer is adxl357 which will be sampled at 1000 Hz. It has an accuracy of bla meters per seconds squared. 
+ First of all, comes the accelerometer. This is a well established and widely used sensor. It measures the force which is applied on the sensor in the three
+ space dimensions. 
+ This years accelerometer is adxl357 which will be sampled at 1000 Hz. It has an accuracy of bla meters per seconds squared. 
  
  \subsection{Gyrometer}
- The Gyrometer is needed to measure the posture of the Rocket. This is espacially needed to determine if the rocket has a pitch angle. If so the pure
+ The Gyrometer is needed to measure the posture of the Rocket. This is especially needed to determine if the rocket has a pitch angle. If so the pure
  acceleration on the z-axis can be calculated. The used gyrometer is ITG-3701.
  
  \subsection{Barometers}
  Barometers are widely used in aviation, cause with a common pressure model the height can be calculated out of the measurements that the barometer takes.
- In this years competition three barometers are used. This are by name 2SMPB-02E and LPS22HBTR. They will be used with a sampling rate 100Hz and 50Hz.
+ In this years competition three barometers are used. This are by name 2SMPB-02E and LPS22HBTR. They will be used with a sampling rate 100Hz and 50Hz. %Has to be checked
  
  \subsection{Temperature}
  The temperature is maybe needed to make the height out of the barometer better because most of the atmospheric model depend on the pressure as well as the temperature.
  This temperature will be provided by the different barometers which each posses a separate temperature sensor. 
+ 
+ \subparagraph{Magnometer}
+ Also there are two Magnometer in the sensor network \ref{fig:SensorNetwork}. These measure the strengths of the surrounding magentic field.
+ This can be used to determine the direction regarding the north pole.
+ Due to the fact that the algorithm that will be developed in this thesis does not include the X- and Y-Axis,
+ these sensor will not be used for the sensor fusion.
  
  \subsection{GPS}
  For next years competition differential GPS will be implemented with the help of two $\mu$blocks modules.
@@ -109,7 +127,9 @@
  The cycling time will be around 1 ms on a embedded system. This time was chosen on the behalf that it would be difficult to get the exact needed cycling time on ensure the needed controlability of the rockets apogee.
  Therefore the system load that the algorithm can cause, has to be strongly limited, so that it can be run on this given system. 
  The system this year is an 32 bit Arm Processor which runs on 168 MHz, assumed that the algorithm has at maximum the half of a software cycle, the maximum given clock cycles are around 84 000.
- This number should not change in great manner over the next competitions.
+ With this cycles the processor can do around 10000 simple calculation (addition, subtraction, multiplication, division),
+ cause with its floating point unit it needs on average around 8.5 cycles per operation (load, calculate, store). 
+ This number is just a rough assumption, which means that the final system load should not exceed this value by a great manner.
  
  \subsection{Precision}
  The Precision is after the system load the most critical attribute, if the algorithm does not get into the required accuracy the whole thing is more or less for nothing.
