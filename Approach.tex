@@ -37,23 +37,50 @@
   The models are defined as follow.
   
   \subsection{Accelerometer}
+  Perfect measuring from the accelerometer is in simple terms the two times deviation of the height.
   $$a = \frac{d^2h}{dt^2}$$
+  This equals in the straight up acceleration. To get the acceleration which would be provided by an accelerometer,
+  the pitch angle has to be calculated into this generated data.
+  
   \subsection{Gyrometer}
+  The gyrometer data can not be directly calculated out of the simulated height.
+  Therefore it has to be generated separately.
+  For this the gyrometer data from the test flights will be taken into account.
   
   \subsection{Barometer}
-  -Use density as a statevector \\
-  -Use exponential atmosphere method. \\
-  -Increasing the R measurement noise matrix when rocket is ascending access the rising uncertainties
+  The barometer which are used in the aerospace usually provide the pressure in hecto Pascal as well as the temperature in degree Celsius.
+%   -Use density as a statevector \\
+%   -Use exponential atmosphere method. \\
+%   -Increasing the R measurement noise matrix when rocket is ascending access the rising uncertainties
   \subsubsection{Pressure}
+  To generated the pressure data, the international atmospheric model is used %Hier Internet Referenz einfügen
   $$P = P0 * (1- \frac{TCoeff*h}{T0})^{5.255}$$
-  with: PO = Pressure at sea level
+  with: PO = Pressure at sea level \\
 	TO = Temperature at sea level
+  This is more or less accurate till 30 000 meter under the condition that the Temperature coefficient is determined correct. 
+
   \subsubsection{Temperature}
+  The temperature depending on the height is difficult to calculate.
+  This due to a lot of uncertainties on which the temperature is depending.
+  For example different air currents and air holes...
+  The mean TCoeff is stated as -0.0065 degree Celsius per meter.
   $$T = T0 - TCoeff*h$$
+  
   \subsection{GPS}
+  The perfect GPS data is seen as the accurate height but with a slow sample rate around 0.5 to 2 Hz.
+  This can simply be achieved by downsampling the height vector with the right factor.
   
   
   \section{Noise generation}
+  To generate the different noises, first the noise from the test flight has to be extracted.
+  If done so, a system can be calculated which represents a white noise filter that generates noises
+  that has the same spectral power density as original noise. This process is visualised in figure.
+  
+  %% Bild vom white noise filter conzept einfügen
+  
+  
+  For this the yule walker equation should come in handy to generate a so called AR (auto regressive) model of the noise system.
+  But to get the correct coefficients, the noise has to have a steady mean value preferably it should be zero mean.  
   
   \section{State estimator}
   Which ones are there and what are their positives and negatives, in short how do they work
@@ -61,7 +88,7 @@
   I should also make some pictures and such things.
   
   There are many possibilities to do sensor fusion. first of all an all new algorithm could be developed which accesses the 
-  stated problems directly. While this solution would be preferebal regarding the efficency, the 
+  stated problems directly. While this solution would be preferable regarding the efficency, the 
   time ad knowledge needed for this task would exceed the resoursces given in this thesis by far.
   Also as stated in chapter \ref{ch:Introduction} a lot of theoretical as well as practical pre work is
   already done and therefore should be used. 
@@ -124,7 +151,7 @@
   each flight. 
   
   \section{System Model}
-  The developed system or how you want to call it it doesn't really matter.
+  The system model to represent the rocket
   will be hold simple to reduce the system load as well as prevent nonlinearities.
   Also the important values to estimate are at first hand the vertical height and speed, so
   for a first implementation just variables that can bed used do determine those both will be used.
