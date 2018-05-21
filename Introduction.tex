@@ -36,7 +36,6 @@
  \begin{figure}[h!]
  \centering
  \includegraphics[width=0.3\textwidth]{./Pictures/ARIS_TELL_Badge.png}
- % ARIS_TELL_Badge.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Official logo of the competition project 2018}
  \label{fig:ArisTell}
 \end{figure}
@@ -68,7 +67,17 @@ Total & 1000 & 100 \% \\ \hline
  $$ Points =  350 - \frac{350}{0.3\cdot TargetApogee} \cdot |TargetApogee - ActualApogee|$$
  
  So there is a total of one point loss per 2.6 meter error \cite{SpaceportAmericaCup2018}. \\
- To aim for the right apogee a Control algorithm is implemented.
+ \begin{figure}[h]
+ \centering
+ \includegraphics[width=.8\textwidth]{./Pictures/RocketModel.jpg}
+ % RocketModel.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Concept of the 2018 competition rocket Tell}
+ \label{fig:2018RocketModel}
+\end{figure}
+ Figure \ref{fig:2018RocketModel} shows the rocket Tell which will be used in this years competition.
+ To aim for the right apogee a Control algorithm is implemented in the lower body micro controller.
+ This control algorithm predicts the apogee which would be achieved depending on the actual states of the rocket (height. speed. acceleration).
+ It then drives the air breaks to adjust that predicted apogee to the aimed 10000 feet.
  This algorithm relays on the information of different sensors to determine the rockets actual state.
  Because there are different sensors to measure the same value a algorithm which fuses those data would come in handy.
  With this fusion algorithm it should also be possible to be more accurate as with each sensor on its own.
@@ -139,8 +148,8 @@ Total & 1000 & 100 \% \\ \hline
  
  \subsection{GPS}
  For next years competition differential GPS will be implemented with the help of two $\mu$blocks modules.
- This taken measurements are more precise as the rest of sensors but are taken much slower on a rate like 1 Hz. Therefore the algorithm should takes
- those provided measurements and interpolate between them with the data from the other sensors.
+ This taken measurements are more precise as the rest of sensors but are taken much slower on a rate like 0.5 - 2Hz. 
+ Therefore the algorithm should takes those provided measurements and interpolate between them with the data from the other sensors.
  
  
  \section{Problems}

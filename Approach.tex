@@ -97,17 +97,39 @@
   
   
   For this the yule walker equation should come in handy to calculate a so called AR (auto regressive) model of the noise system.
-  An AR model is a FIR (all pole) system which generates a random sequence with defined power density spectrum out of white gaussain noise.
+  An AR model is a FIR (all pole) system which generates a random sequence with defined auto correlation $\gamma_{yy}$ out of white gaussain noise.
   
-  $$ y[n] = w[n] - \sum_{k=1}^{N} a_k \cdot y[n-k]  $$
+  $$ y[n] = \omega[n] - \sum_{k=1}^{N} a_k \cdot y[n-k]  $$
   
-  The yule walker equation
-  % Put the equation into here
-  
-  estimates the coefficient of the FIR system which can be used to generate a random sequence which has the same power density spectrum as the input sequence y.
+  The yule walker equations
+  \begin{align*}
+    \begin{bmatrix}
+     \gamma_{yy}[0] & \gamma_{yy}[-1] & \dots & \gamma_{yy}[-N] \\
+     \gamma_{yy}[1] & \gamma_{yy}[0] & \dots & \gamma_{yy}[-N+1] \\
+     \vdots 		& \vdots 	& 	& \vdots	\\
+     \gamma_{yy}[N] & \gamma_{yy}[N-1] & \dots & \gamma_{yy}[0]
+    \end{bmatrix}
+    & \cdot
+    \begin{bmatrix}
+     1 \\
+     a_1 \\
+     \vdots \\
+     a_N   
+    \end{bmatrix}
+    & = 
+    \begin{bmatrix}
+     \sigma^2_\omega \\
+     0 \\
+     \vdots \\
+     0
+    \end{bmatrix}
+    \hfill
+  \end{align*}
+  \hfill
+  estimate the coefficient $a_1 \dots a_N $ of the FIR system and the variance of the noise $\sigma^2_\omega $ which can be used to generate a random sequence which has the same auto correlation $\gamma_{yy}$ as the input sequence y.
   Because the AR model consists of an all pole filter, the noise should have has to have a steady mean value preferably it should be zero mean.
   This way the estimated AR model from the yule walker equation can represent the real system at best.
-  For this the mean value of the measurements should be calculated beforehand and then be substracted to get there zero mean noises.
+  For this the mean value of the measurements should be calculated beforehand and then be subtracted to get there zero mean noises.
   The part of the mean values that represent noise and can then be added after the noise in generated to represent the real sensors as good as possible.
   
   \section{System Model}
@@ -189,10 +211,8 @@
   \end{bmatrix} $$ 
   While this solves the problem stated above, it also produces a new. The system model can only describe linear dependencies between the state variables,
   but the relation between the pressure and the height is clearly non linear in each atmospheric model.
-  This dependency can be linearized, but if done so, it does resemble the athmosperic model with less accuracy.
-  This as to be taken into account an has to be 'told' to the state estimator.
-  The change of the temperature depending on the height is a difficult manor.
-  
+  This dependency can be linearized, but if done so, it does resemble the atmospheric model with less accuracy.
+  This linearisation can be used to interpolate between the barometer measurements so the actual pressure is available at any loop iteration.
   This results in a 4x4 A matrix and also a zero B vector for the dynamics equation which look like this:
   \begin{align*}
   A = \begin{bmatrix}
@@ -211,7 +231,7 @@
   \end{align*}  
   
   This would also inflect on the output matrices which do then contain the pressure directly.
-  In additiion the height calculated from the pressure can be inserted as additional measurements to include them into the estimation.
+  In addition the height calculated from the pressure can be inserted as additional measurements to include them into the estimation.
   
   \begin{align*}
    y = \begin{bmatrix}
@@ -234,14 +254,14 @@
 
   \subsection{Point Mass with Angle and Pressure}
   The same solution as above can also be applied for the pitch angle. 
-  The assumption that the pitch angle of the rocket wont be to great during the ascention is suitable due to its flight caracterices.
+  But its linearisation is more complicated 
   This would change the state vector from above into the following.
   $$ x = \begin{bmatrix}
   h_z\\
   v_z\\
   a_z\\
-  \varphi_{pitch}\\
   p\\
+  \varphi_{pitch}\\
   \end{bmatrix} $$
   This would extend the dynamic part for A into a 5x5 matrix while the B matrix still would be a zero vector.
   \begin{align*}
@@ -284,8 +304,8 @@
         0 & 0 & 0 & 0 & 1 \\
         \end{bmatrix}
   \end{align*}
-
-  
+  This solution would take all measurements available for the needed values into account.
+  It would also keep the calculation in the system as simple and linear as possible.
   \subsection{Discretisation}
   The system stated above are all in continuous time state space description. 
   For implementation on a discrete time system like a micro controller they have to be discredited.
@@ -356,10 +376,12 @@
   and does therefore need even more computational effort \cite{SimonDan2006Ose:}.
   
   \subsection{H$\infty$ filter}
-  % Describe in detail how this works to work without detailed knowledge of the system
   The H$\infty$ filter is a more diverse approach then the ones described above.
-  It was developed to access the problem when the to be observed system espacially its noise is not well known.
-  Also in contrast to the kalman filters the H$\infty$ filter minimizes the worst-case estimation error 
+  It was developed to access the problem when the to be observed system especially its noise is not well known.
+  In other words it was developed to resemble an as robust as possible state estimator.
+  In addition its stability can be easier guaranteed that with a kalman filter.
+  For this it consists of additional tuning parameters which makes it more complicated ti use.
+  Also in contrast to the kalman filters the H$\infty$ filter minimises the worst-case estimation error 
   in stand of the standard deviation of the estimation error \cite{SimonDan2006Ose:}.
   
   \section{Choosing}
@@ -388,7 +410,7 @@
   The prediction equations take the currently values of the state vector ($x[k]$)
   and uses the time depending system model part (A) to predict the state values for the next time step $\hat{x}[k+1]$.
   The hat denotes that this value is an assumption.
-  This with the equation: $$ \hat{x}[k+1] = AD\cdot x[k] + Bd\cdot u[k] $$
+  This with the equation: $$ \hat{x}[k+1] = Ad\cdot x[k] + Bd\cdot u[k] $$
   In addition the certainty matrix (P) is calculated which means that it is calculated how trustworthy those predictions are.
   $$ P = Ad\cdot P\cdot Ad^T + Gd\cdot Q[k]\cdot Gd^T$$
   For this the system noise is used, so with the help of the Q matrix it can be stated how well known the system is in this
@@ -397,7 +419,7 @@
   \subsubsection{Correction Step}
   If the measurements arrive those will be used can be used in the correction step to correct the prediction.
   First the Kalmangain (K) is calculated with the equation.
-  $$ K = P\cdot C^T\cdot (C\dot P\dot C^T + R[k])^{(-1)} $$ 
+  $$ K = P\cdot C^T\cdot (C \cdot P \cdot C^T + R[k])^{(-1)} $$ 
   This uses the P matrix from the prediction step as well as the R matrix which represents the measurments noise (how certain the values from the measurements are).
   K is then used in the last equation. $$x[k] = \hat{x}[k] + K\cdot (y[k] - C\cdot \hat{x}[k]-Dd\cdot u[k])$$
   With this the measurement is used to correct the predicted value of the state vector with there uncertainties taken into account \cite{DavidWSchultz2004}. 

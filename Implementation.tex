@@ -107,8 +107,13 @@ To recreate this, the offset can be estimated from the test flight data.
 Especially the data before the ignition are help full, because the value that should be measured is known.
 
 \subsubsection{Gyrometer}
-For the gyrometer noise a seperat skript was written to calculate the proper pitch angle and filter out the offset before-
-% Do this better as it is now
+For the gyrometer noise a separate script was written to calculate the proper pitch angle and filter out the offset before generating the AR-model.
+This because the gyrometer measurements which are available are in degree per second and have therefore to be integrated before they resamble the correct pitch angle.
+In addition it is complicated to define which part of the measurements are noise and which is the ground truth.
+It was found that the estimated AR- model could not regenerated the noise with proper capacities.
+Because of that, the noise has to be low pass filter afterwards to resemble the noises better.
+For this task a IIR filter of order 200 was found best.
+Therefore those measurements have to be properly handled.
 
 \subsubsection{Barometer}
 First there are two or more barometer which sample on different frequencies ant have therefore also different accuracy's.
@@ -121,96 +126,220 @@ So the noise will have the same capacities over the whole flight.
 This due to the assumption that the GPS measurements should be independent from the motors vibration and the rockets posture changes.
 This should be suitable as long as the receiver does not lose its fix.
 
+\newpage
 \subsection{Real Sensor}
 To now generated the real sensor data, the different noises have to be generated like stated above.
 For this a vector of normal distributed random values is generated and multiplied by the square root of the corresponding variance.
 This white noise is now filtered by the corresponding AR-model and can then be added onto the corresponding perfect sensor data.
 This now results in the real sensor data.
 
-%Insert here pictures from the real sensor data and discuss how it looks and why:
 \subsubsection{Accelorometer}
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=0.8\textwidth]{./Pictures/AccelPerfVSReal.jpg}
+ % AccelPerfVSReal.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Plot of perfect acceleration vs realistic vs measured}
+ \label{fig:AccelPerfVsReal}
+\end{figure}
+In figure \ref{fig:AccelPerfVsReal} the different generated values as well as the data from a test flight can be seen.
+The time vector from the test flight was stretched by the factor two to make the observation easier.
+Also it has to be said that the test flight was with a smaller rocket which flew only at an apogee of around 300 meters.
+This explains why the acceleration is as great as in the generated data and why the time vector had to be stretched.
+But the plot shows that the noise as well as the perfect data resemble the acceleration from the test flight in a appropriate way.
 
 
 \subsubsection{Gyrometer}
-
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=0.8\textwidth]{./Pictures/PitchPerfVSReal.jpg}
+ % PitchPerfVSReal.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Plot of perfect gyrometer vs realistic vs measured}
+ \label{fig:PtichPerVSReal}
+\end{figure}
+Figure \ref{fig:PtichPerVSReal} shows the generate gyrometer data.
+Like in the acceleration plot the time vector from the test flight data was adjusted for better observability.
+It should also be explained due to the proberty of the pitch angle (more or less random depening ond air current etc) that the generated realistic pitch angle must not resamble the measured angle in its specific value.
+Important is in first hand that the noises have the same capacities which they do.
+Also it can be seen that the assumption that the angle does no change great during the burning of the motor is despite a quick change at the start appropriate.
 
 \subsubsection{Barometer}
-
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=0.8\textwidth]{./Pictures/PressurePerfVSReal.jpg}
+ % PressurePerfVSReal.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Plot of perfect barometer vs realistic vs measured}
+ \label{fig:PressurePerfVSReal}
+\end{figure}
+The realistic pressure measurements from a barometer are shown in the figure \ref{fig:PressurePerfVSReal}.
+The noise itself does not to see as it would have a great impact on the perfect data.
+But this decieves because the pressure does change by around 350 hecto Pascal during the upflight
+and therefore the changes from the noise which are around 1 to 3 hecto Pascal can not be seen that good.
+The comparison with the real measured data (in the figure also with a stretched time vector) shows that generated realistic measurement data does resemble real measurements.
 
 \subsubsection{GPS}
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=0.8\textwidth]{./Pictures/GPSPerfVSReal.jpg}
+ % GPSPerfVSReal.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Plot of perfect GPS vs realistic vs measured}
+ \label{fig:GPSPerfVSReal}
+\end{figure}
+At least the generated GPS measurements can be observed in the figure \ref{fig:GPSPerfVSReal}.
+In this plot the pure generated noise was also plotted because as it can be seen it has real slow properties.
+For the comparison the measurements which were taken from a fixed position are plotted (because there were no usable GPS data from a test flight avaiable during the term of this thesis).
+It can be seen that the test data does also resemble the noise from the generated data.
 
-
-
-\section{State Estimation} %% Do this maybe in introduction because it is not specific to this simulation
-% As stated the used state estimator is a kalman filter with dynamic noises on the system as well as on the measurements.
-% This algorithm works in 4 main equations which can be devided into prediction and correction steps figure \ref{fig:Kalmanfilter}.
-% 
-% \begin{figure}[h!]
-%   \centering
-%   \includegraphics[width = \textwidth]{../BDADoku/Pictures/KalFIlFunc.pdf}
-%   \caption{Kalmanfilter}
-%   \label{fig:Kalmanfilter}
-% \end{figure}
-% 
-% \subsection{Prediction}
-% The prediction equations take the currently values of the state vector ($x[k]$)
-% and uses the time depending system model part (A) to predict the state values for the next time step $\hat{x}[k+1]$.
-% The hat denotes that this value is an assumption.
-% This with the equation: $$ \hat{x}[k+1] = AD*x[k] + Bd*u[k] $$
-% In addition the certainty matrix (P) is calculated which means that it is calculated how trustwotrhy those predictions are.
-% $$ P = Ad*P*Ad' + Gd*Q[k]*Gd'$$
-% For this the system noise is used, so with the help of the Q matrix it can be stated how well known the system is in this
-% time step.
-% 
-% \subsection{Correction Step}
-% If the measurements arrive those will be used can be used in the correction step to correct the prediction.
-% First the Kalmangain (K) is calculated with the equation.
-% $$ K = P*C'*(C*P*C' + R[k])^{(-1)} $$ 
-% This uses the P matrix from the prediction step as well as the R matrix which represents the measurments noise (how certain the values from the measurements are).
-% K is then used in the last equation $$x[k] = \hat{x}[k] + K*(y[k] - C*\hat{x}[k]-Dd*u[k])$$.
-% With this the measurement is used to correct the predicted value of the state vector with there uncertainties taken into account 
-% 
-% For this the matrices for the system models (A,B,C,D), the measurements noise (Q) as well as the system noises (R) have to be defined.
+\section{State Estimation}
 As stated the used state estimator is a kalman filter with dynamic noises in the measurements as well in the systems.
 For this the noise matrices as well as the used loop is described below.
 
 \subsection{System Model}
 The models are modelled as stated in chapter \ref{ch:Approach} but from this different uses can be made out of this.
-For this simulation bla models were implemented with each different capability.
+For this simulation 8 models were implemented with each different capability.
 
 Due to this, these different implementation are tested and evaluated in the next chapter.
 \subsection{Adjustment}
-% Acel offset and accel as input 
+Taken into account the above stated noise capacities of the measurements there were new systems developed which should hopefully result in better results.
+\subsubsection{Offset}
+The main adjustment is the inclusion of acceleration offset into the state vector.
+This is a common tactic used so that the state estimator can estimate the actual offset and therefore the impact of the offset can be minimised \cite{DavidWSchultz2004}.
+Therefore the state vector of a point mass would look like this.
+$$ x = \begin{bmatrix}
+        h_z \\
+        v_u \\
+        a_z \\
+        a_{offset} \\
+       \end{bmatrix}
+$$
+While the dynamic matrices A and B would stay the same apart form an additional dimension of zeros for the acceleration offset state variable.
+\begin{align*}
+ A = \begin{bmatrix}
+      0 & 1 & 0 & 0 \\
+      0 & 0 & 1 & 0 \\
+      0 & 0 & 0 & 0 \\
+      0 & 0 & 0 & 0
+     \end{bmatrix}
+     & \hspace{1cm}
+ B = \begin{bmatrix}
+      0 \\
+      0 \\
+      0 \\
+      0
+     \end{bmatrix}
+\end{align*}
+The y vector would stay the same while the output matrix $C^T$ will be adjusted so that both acceleration in the state vector are added into the accelerometer measurements.
+\begin{align*}
+ y = \begin{bmatrix}
+      h_{GPS} \\
+      h_{p1} \\
+      h_{p2} \\
+      a
+     \end{bmatrix}
+     & \hspace{1cm}
+ C^T = \begin{bmatrix}
+      1 & 0 & 0 & 0 \\
+      1 & 0 & 0 & 0 \\
+      1 & 0 & 0 & 0 \\
+      0 & 0 & 1 & 1
+     \end{bmatrix}
+\end{align*}
+
+\subsubsection{Acceleration as Input}
+An additional adjustment would be to consider the measured acceleration of the rocket as input into the system.
+This should result into a system which could react faster to changes in the acceleration.
+For this the measurement noise of the accelerometer would have to be placed in the system noise matrix 
+and therefore no additional system noise can be modulated.
+For a point mass this would result in the following system matrices.
+While the state vector and the A matrix would stay the same, the B vector would have to be adjusted like this.
+$$ B = \begin{bmatrix}
+        0 \\
+        0 \\
+        1
+       \end{bmatrix}
+$$
+In addition the y vector would lose its acceleration measurements and the output matrix $C^T$ the corresponding dependencies.
+\begin{align*}
+ y = \begin{bmatrix}
+      h_{GPS} \\
+      h_{p1} \\
+      h_{p2} \\
+     \end{bmatrix}
+      & \hspace{1cm}
+ C^T = \begin{bmatrix}
+        1 & 0 & 0 \\
+        1 & 0 & 0 \\
+        1 & 0 & 0 \\
+       \end{bmatrix}
+\end{align*}
 
 \subsection{Measurements noise}
-The measurement noise matrix on each timestamp is easy to get in this simulation because the perfect measurements are known.
-%First one variance per data vector can be used to simplify the whole process but this should not be too accurate.
+The matrix on each timestamp is rather easy to get in the simulation because the perfect measurements are known.
 
-%As a second possibility the variance can be calculated different for before and after burnout.
-First the variance over the burning of the motor as well as over the up flight is calculated.
+First the variance over the burning of the motor as well as over the up flight is calculated seperatly.
 After that those values are used to generate a noise vector for each measurements.
 In addition in the implementation the noise vector have the same length as all other used vectors.
-But because not all 
-
 These noise measurements are then catognated into a diagonal noise matrices.
+
 If the noise matrix is displayed as a diagonal matrix, 
 it equals in the assumption that the noises from the measurements are independent from each other.
 This assumption can be made cause of the fact that each measurements expected those from the barometer are made from different sensors.
 The barometer measurements are the pressure as well as the temperature.
 Due to the fact that the temperature is not used for the state estimation, the measurements matrix can still be assumed as diagonal.
 
+\subsubsection{Different Sampling time}
+In addition the measurement noise matrix can be used to adjust for the different sampling times of the sensors.
+This is used for the barometers as well as the GPS sensors which are sampled slower as the state estimation itself loops.
+It is achieved by maxing out (setting to the highest possible value) the corresponding variance in the measurement noise matrix R if no actual measurements are available.
+As it can be seen in the formula to calculate the kalman gain K, 
+$$  K = P\cdot C^T\cdot (C\cdot P\cdot C^T + R)^{-1} $$
+maximal values in the R matrix result in relative zero value in the corresponding K matrix value.
+Those near or exactly zero values results in ignoring the corresponding measurements from the y vector as it can be seen in the measurement update equation.
+$$  x = \hat{x} + K\cdot(y[k] - C^T \cdot \hat{x}) $$
 
+To achieve this the noise vector from those measurements are generated with this taken into account to achieve the same vector length as all other vector used in the state estimation.
+In the implementation in a embedded system this can simply be achieved by an if statement which switches the R matrix value to the normal variance if a measurements arrives.
 
 \subsection{System noises}
-For the system noise the behaviour of the system during the flight has to be examinated.
-And after that it has to be implemented as good as possible.
-For an example the acceleration which is most times modeled as stable with a little system noise on it,
-has to have a lot of noise during the ignition and also during the burnout because it changes a lot there.
+The system noise describes how uncertain the system model is in comparison to the real system.
+For this each entry in the diagonal resembles the variance of the noise on the corresponding state variable.
+In other words the system noise describes how far away from the predicted value the actual value can get in the next loop iteration.
+For the system noise the behaviour of the system during the flight has to be examined.
+This can be done in different ways.
+The first way would be to view the different ground truth curves of those state variables,
+which do have system noise acting on them (acceleration, pitch angel, pressure if linearized).
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=.8\textwidth]{./Pictures/PitchAnglePlot.jpg}
+ % PitchAnglePlot.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Plot of pitch angle}
+ \label{fig:PitchAnglePlot}
+\end{figure}
+For example figure \ref{fig:PitchAnglePlot} which represent the pitch angel.
+In the system models there are no influences on this state value except for the measurements.
+So to describe the changes of the value which are observed with the measurements a system noise has to have an impact on the pitch angle.
+As it can be seen in the plot the angle does not change in a great manner until the burnout so the system noise till the burnout should also be rather small.
+After the burnout the angle changes a lot more but keeps changing in the same way so this would reassemble a greater noise as before the burnout 
+but the noise should be more or less the same over time. \\
 
-The best solution was found in diffiating the corresponding values and then low pass filtering it with an IIR moving average filter like this;
+As a second attempt since the system noise describes the capability of the value to change over time independent from the dynamic system description 
+it can also be achieved due deviating the ground truth value vector.
+For this the following matlab code can be used.
+\begin{lstlisting}[caption={System noise generation with deviation}]
+ACEL = abs(diff(a));				% Deviating the gournd truth acceleration
+ACEL = filter(ones(1,100)*1/100,1,ACEL);	% Low pass filtering
+ACEL = [ACEL ACEL(end)];			% Maintain vector length
+\end{lstlisting}
+This shows that after the deviation the absolute value from those is taken since a variance cannot or should not be negative.
+After that the values are low pass filtered to smooth out more steady system noise description.
 
+\subsection{Sensor Outfall}
 
+An additional interesting scenario which can be observed with the simulation is the outfall of sensors.
+This is needed to test the reliability requirements which states that the algorithm should still be working (with less accuracy) if 2-3 sensor fail.
+For this it has to be said that it has to be detected that a sensor fails to adjust the estimation algorithm.
+If done so the variance can be adjusted for this sensor in the same way as stated above, by maxing its variance out.
 
+It is achieved by a simple if statement which does exactly that if a sensor fail is recognised.
 
 \subsection{Loop}
 Finally the state estimation is implemented in a simple loop which iterates trough each given time stamp.
@@ -236,7 +365,7 @@ Height2 = 0;
 Temp = T(1);
 
 % Estimation loop
-x_est_loop3 = zeros(size(x,1),length(TimeVec));     %Vector for the SE values
+x_est_loop = zeros(size(x,1),length(TimeVec));     %Vector for the SE values
 for k = 1:length(TimeVec)
     K = P*C'*pinv(C*P*C' + R_dyn_m(:,:,k));
     Height1 = CalcHeight(Po,p_mes_1(k),Temp,0,true,TgradSimu);
@@ -245,7 +374,7 @@ for k = 1:length(TimeVec)
     x = x + K*([h_mes_GPS(k);acc;Height1;Height2;phi_mes(k)] - C*x);
     P = (eye(5)-K*C)*P;
     
-    x_est_loop3(:,k) = x;                           %Save data from the Sensor fusion
+    x_est_loop(:,k) = x;                           %Save data from the Sensor fusion
     
     x = Ad*x + Bd*u(k);
     P = Ad*P*Ad' + Gd*Q_dyn_m(:,:,k)*Gd';
