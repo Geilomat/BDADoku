@@ -1,7 +1,53 @@
+Following in this chapter are the test that were taken to gain insight of the different system models and their performances.
+First a general analysis is made by plotting the whole estimated flight as well a table which displays the errors of the different estimated values which were taken from multiple simulation cycles.
+For this all estimation were made with an acceleration offset of $ -1.31 m/s^2$  which was taken out of measurements from a test flight.
+Also for the general analysis a perfect calculated linear temperature gradient of $-0.0065 °/m$ was used.
+After that the different problematic properties of each system model are discussed in detail.
+At the end the best system is tested under different circumstances.
+
+
 \section{Point Mass}
 The first system model to test was the simple point mass as stated in chapter \ref{ch:Approach}.
 While this implementation is a simple version it does already work surprisingly good.
-The mean error over the whole flight is normally around 4-5 meter.
+In figure \ref{fig:PointMassPerformance} the overall performance of its estimation of the different values can be seen.
+
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8\textwidth]{./Pictures/PointMassPerformance.jpg}
+ % PointMassPerformance.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{The performance of the point mass system model over time}
+ \label{fig:PointMassPerformance}
+\end{figure}
+
+Especially the first second under right corner and the last five seconds upper right corner are interesting.
+It can be seen that the system does not really have a settling time at all,
+because the height is estimated at the minimal error at the beginning of the estimation.
+On the other hand the speed needs around 0.2 seconds to settling on the right value.
+Also a clear error on the estimation of the error can be seen after the speed has settled,
+this is due the fact that the estimator can trust the GPS and pressure measuerements much more at the start then the acceleration mesurements.
+Therefore the estimator does adapt the acceleration estimation on the height and speed estimation at the start and not the other way around.
+In the last five second it can be seen that the height is far more of then at the start.
+Also the steps which the estimation makes are coming from the GPS measurements.
+In addition the table \ref{tab:ErrorPointMass} shows the mean and median error of the estimated values are displayed.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccccc}
+\hline
+\multicolumn{1}{|c|}{State Variable} & \multicolumn{1}{c|}{Unit} & \multicolumn{1}{c|}{Max} & \multicolumn{1}{c|}{Min} & \multicolumn{1}{c|}{Mean} & \multicolumn{1}{c|}{Median} \\ \hline
+Height                            & $m$                         & 20.05                  & 1.18e-05                 & 4.72                    & 2.20                      \\
+Speed                             & $m/s$                       & 3.42e+03               & 0                        & 3.40                    & 2.43                      \\
+Accelration                       & $m/s^2$   			& 17.79                  & 2.55e-05                 & 1.67                    & 1.55                     
+\end{tabular}
+\caption{Error of estimated state variables}
+\label{tab:ErrorPointMass}
+\end{table}
+
+The most interesting value is the median from the height error because it is free from outliers.
+It shows that the height error is with 2.2 slightly above the aimed 2 meter.
+
+\subsection{Greater Offset}
 It has to be said that this only works while no sensor has a greater offset.
 Therefore these values come at the cost that they are not that trustworthy, 
 because the system noise on the acceleration has to be set to a greater value to get those good estimation.
@@ -19,31 +65,70 @@ This can be seen in figure \ref{fig:PointMassErrorWithOffset} which shows the st
 
 The table \ref{tab:PointMassPerformanceWithOffset} shows the mean and median of the error in the height depending on the offset on the accelerometer.
 
-\begin{table}
-\begin{center}
+\begin{table}[h!]
+\centering
 \begin{tabular}{ccc}
-& Mean & Median\\
+\hline
+\multicolumn{1}{|c|}{Offset} & \multicolumn{1}{|c|}{Mean}& \multicolumn{1}{|c|}{Median} \\ \hline
+%
+% & Mean & Median\\
 Normal & 4.57 & 2.80\\
-2Times & 13.97 & 14.66\\
-4Times & 39.31 & 46.99\\
-6Times & 59.35 & 71.90\\
-8Times & 107.21 & 102.15
+2 Times & 13.97 & 14.66\\
+4 Times & 39.31 & 46.99\\
+6 Times & 59.35 & 71.90\\
+8 Times & 107.21 & 102.15
 \end{tabular}
-\end{center}
+\caption{Error of the height in meter with changing offset}
 \label{tab:PointMassPerformanceWithOffset}
 \end{table}
 
 This shows that the error which the estimator makes does rise exponentially.
 So this is an issue which should be assessed by including an acceleration offset in the state vector.
 
-\subsection{Performance}
-%% Add a performance table like max min mean median error under different circumstances. With offsets 
-% Discuss pros and cons like not that good estimation but small system load 
 
-
+\newpage
 \section{Point Mass with Acceleration Offset}
-While this system works also sometimes no so good as the first most times it works much better and therefore this should be implemented in the final system.
-Like above the figure \ref{fig:PointMassOffsetErrorWithOffset} shows the error during a flight with different sensor offsets.
+The overall performance of this system model can be seen in the figure \ref{fig:PointMassOffsetPerformance}.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8 \textwidth]{./Pictures/PointMassOffsetPerformance.jpg}
+ % PointMassOffsetPerformance.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Performance of point mass with acceleration offset over time}
+ \label{fig:PointMassOffsetPerformance}
+\end{figure}
+
+While the speed and height of it does preform more or less the same way at the first second like the point mass system model.
+A clear difference in the estimated acceleration can be seen.
+This is possible due to that the estimator can describe the difference in the system description between the speed and acceleration as the acceleration offset.
+These dependencies can be seen after the settling of the speed where the estimator starts to change the acceleration offset value to adjust the acceleration.
+The great advantage of this can be seen in the plot of the last five seconds of the height estimation (upper right plot).
+Due to the better estimation of the acceleration over the whole time, the dependencie of the height on the acceleration is much more trustworthy.
+When the rocket does rise at further height and the measurements of the barometers lose their accuracy,
+the better acceleration measurements can be used to interpolate between the good GPS measurements.
+This results in a much better height estimation at greater height.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccccc}
+\hline
+\multicolumn{1}{|c|}{State Variable} & \multicolumn{1}{c|}{Unit} & \multicolumn{1}{c|}{Max} & \multicolumn{1}{c|}{Min} & \multicolumn{1}{c|}{Mean} & \multicolumn{1}{c|}{Median} \\ \hline
+Height                            & $m$                         & 9.78                   & 2.98e-06                 & 1.33                    & 0.83                      \\
+Speed                             & $m/s$                       & 78.79                  & 0                        & 3.18                    & 2.22                      \\
+Accelration                       & $m/s^2$   			& 165.87                  & 1.35e-05                 & 4.52                    & 2.64                     \\
+Accelration Offset                & $m/s^2$   			& 167.46                  & 2.66e-05                 & 4.44                    & 2.61                     
+\end{tabular}
+\caption{Error of estimated state variables point mass with acceleration offset}
+\label{tab:ErrorPointMassAccelerationOffset}
+\end{table}
+
+In the table \ref{tab:ErrorPointMassAccelerationOffset} the error of the estimation are shown.
+The thing thing that is seen quite fast are the maximum of the estimation errors from the acceleration an speed which are greater than that of of the point mass system model.
+These occured due one false estimation during one of the simulation.
+The interesting thing about this is that the mean value of the estimated height and speed are still better than the ones from the point mass system model.
+Also it can be seen that the median of the height error is just 0.83 meter. \\
+
+Like with the point mass system model the figure \ref{fig:PointMassOffsetErrorWithOffset} shows the error during a flight with different sensor offsets.
 It can clearly be seen that while the mean error does rise about some value, it always get back to zero and therefore overall this system preforms better as the simple point mass.
 
 \begin{figure}[h!]
@@ -54,12 +139,43 @@ It can clearly be seen that while the mean error does rise about some value, it 
  \label{fig:PointMassOffsetErrorWithOffset}
 \end{figure}
  
-\subsection{Performance}
-%While it performes much better than the only point mass system it should be much room for above.
 
-
+\newpage
 \section{Point Mass with Pressure}
-The pressure used as state vector has to be shown that it is not that good as firstly tough.
+Like above the overall performance of a system model which uses the pressure as a state variable can be seen in figure \ref{fig:PointMassPressurePerformance}.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8 \textwidth]{./Pictures/PointMassPressurePerformance.jpg}
+ % PointMassOffsetPerformance.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Performance of point mass with pressure over time}
+ \label{fig:PointMassPressurePerformance}
+\end{figure}
+
+This shows that it performance as good as a system which uses acceleration offset as a state value.
+It can be seen that the pressure is such good estimated that it covers the real pressure curve fully in the plot.
+Also in the plot of the first second it can be seen that there is no settling time for either of the estimation values.
+The height in the last 5 second shows also that the impact from the GPS measurements are much smaller (no staircase like adjustment of the height like in point mass system model).
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccccc}
+\hline
+\multicolumn{1}{|c|}{State Variable} & \multicolumn{1}{c|}{Unit} & \multicolumn{1}{c|}{Max} & \multicolumn{1}{c|}{Min} & \multicolumn{1}{c|}{Mean} & \multicolumn{1}{c|}{Median} \\ \hline
+Height                            & $m$                         & 5.16                   & 1.47e-06                 & 1.20                    & 0.96                      \\
+Speed                             & $m/s$                       & 8.80                   & 0                        & 1.89                    & 1.61                      \\
+Acceleration                      & $m/s^2$   			& 18.14                  & 3.90e-05                 & 1.80                    & 1.63                      \\
+Pressure                  	  & $hPa$   			& 0.72                   & 4.69e-06                 & 0.13                    & 0.11                     
+\end{tabular}
+\caption{Error of estimated state variables point mass with pressure}
+\label{tab:ErrorPointMassPressure}
+\end{table}
+
+Like above table \ref{tab:ErrorPointMassPressure} shows the error over the simulations.
+The error on the height is nearly as good as with the acceleration offset, while the maximums of the differences are quit smaller then above.
+These results therefore in much better mean values of the errors.
+
+\subsection{Wrong Temperature gradient}
 While it does increase the accuracy it does also increase the needed computational effort due to the fact that to get a real added value from this,
 the height out of the pressure has to be calculated at each time step with the help of the estimated pressure.
 In addition when the temperature gradient is chosen wrong it deeply effects the estimation like seen in figure \ref{fig:PointMassVSPressure}.
@@ -78,17 +194,52 @@ While they preform equal as good while the temperature gradient is determined co
 If the gradient is determined wrong by just 5 percent it already performance less accurate than all other tested system models.
 This is a problem due to the fact that the temperature gradient will most certanly not be correct during the whole flight.
 With this can be seen that the system performance is more ore less the same as the normal point mass system.
-Therefore the cost and problems that can occur outweight the gain here so it will not be implemented in the best system here..
+Therefore the cost and problems that can occur outweight the gain here so it will not be implemented in the best system here.
 
-
-
+\newpage
 \section{Point Mass with Pitch angle}
 The pitch angle is difficult to estimate because it has no measured dependencies on its own.
 Therefore the kalman filter does just something like a real time low pass filtering on those measurements.
-So the system noise on the pitch angle has to be as good calculated as possible to optimise its estimation.
-In addition the impact of the pitch angle is smaller than firstly tought.
+This circumstance can be seen in figure \ref{fig:PointMassPitchAnglePerformance} there the estimated pitch angle does change slower than the generated measurements value which can be seen in chapter \ref{ch:Implementation}.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8 \textwidth]{./Pictures/PointMassPitchAnglePerformance.jpg}
+ % PointMassOffsetPerformance.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Performance of point mass with pitch angle over time}
+ \label{fig:PointMassPitchAnglePerformance}
+\end{figure}
+
+The overall performance does more or less resembles that of the normal point mass system this can be espacially seen in the last five seconds of the height estimation.
+Where the both estimation are equal to each other (the estimation of the point mass system model does overlap the one of the system model which includes the pitch angle estimation)
+The one great difference which can be seen in the plot of the first second is that the estimator tries to correct the wrong acceleration measurements (due to the offset) with the change of the pitch angle.
+But because the system noise on this pitch angle states that it does not change in a great manner until the burnout the influence is restricted.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccccc}
+\hline
+\multicolumn{1}{|c|}{State Variable} & \multicolumn{1}{c|}{Unit} & \multicolumn{1}{c|}{Max} & \multicolumn{1}{c|}{Min} & \multicolumn{1}{c|}{Mean} & \multicolumn{1}{c|}{Median} \\ \hline
+Height                            & $m$                         & 20.24                  & 4.46e-06                 & 4.75                    & 2.24                      \\
+Speed                             & $m/s$                       & 78.57                   & 0                        & 3.42                   & 2.44                      \\
+Acceleration                      & $m/s^2$   			& 17.79                  & 6.26e-05                 & 1.68                    & 1.55                      \\
+Angle	                  	  & $°$   			& 12.26                   & 2.46e-05                 & 2.41                  & 1.90                     
+\end{tabular}
+\caption{Error of estimated state variables point mass with pressure}
+\label{tab:ErrorPointMassPitchAngle}
+\end{table}
+
+In the table \ref{tab:ErrorPointMassPitchAngle} the errors of the estimation can be seen once again.
+It shows the values are nearly the same as the ones from the point mass system.
+
+\subsection{Small Influence}
+This results in the conclusion that the influence of the pitch angle is much smaller than thought.
 This mainly because the pitch angle does only start to get to a greater value after the burnout.
 After this the vertical acceleration is much smaller and therefore a error of the angle by a few degrees does not make such a great impact.
+In other words for example if the real angle is 10 degrees at the measurement at this point is around 18 degrees while the estimation is 11 degrees.
+Then this means the measured acceleration of for example 10.15$m/s^2$ should be corrected to 10$m/s^2$. With the estimated angle it is corrected to 9.97$m/s^2$,
+while with the measured angle it is corrected to 9.66$m/s^2$. So for this example an error of 8 degrees would only result in a a false estimation by 0.31$m/s^2$.
+Altough this error does not develop in a linear fashion especially when the angle has a greater value due to the rather small accelerations after the burnout the impact of the noised measurements is still strongly limited.
 This can be seen in the plot of figure \ref{fig:PointMassVSPitch} where the estimation which uses the pitch angle as a state variable does only performance slightly better.
 \begin{figure}[h!]
  \centering
@@ -98,32 +249,79 @@ This can be seen in the plot of figure \ref{fig:PointMassVSPitch} where the esti
  \label{fig:PointMassVSPitch}
 \end{figure}
 
-On the other hand in this implementation the pitch angle does more of less the same thing as the acceleration offset because of it properties.
-
-
+\newpage
 \section{Point Mass with Acceleration as input}
-It can be seen in the plot in figure \ref{fig:PointMassVSAccelerationInput}, that the estimated height estimated when the acceleration measurements are taken as a input that they reseamble more or less the exact values as from the normal system.
+The overall performance from this system model is shown in figure \ref{fig:PointMassAccInputPerformance}.
+
 \begin{figure}[h!]
  \centering
- \includegraphics[width=.8\textwidth]{./Pictures/PointMassVSAccelerationInput.jpg}
- % PointMassVSAccelerationInput.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
- \caption{Error over the flight from the point mass system model with and without the acceleration as input}
- \label{fig:PointMassVSAccelerationInput}
+ \includegraphics[width=.8 \textwidth]{./Pictures/PointMassAccInputPerformance.jpg}
+ % PointMassOffsetPerformance.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Performance of point mass with acceleration as input over time}
+ \label{fig:PointMassAccInputPerformance}
 \end{figure}
 
-The difference between int the errors between this system model and the normal point mass model is mostly due rounding errors of the simulation then due to really better estimation.
+Its performance does also resemble the point mass system model quit well without any significant improvement.
+Like above with the pitch angle the estimated height of the both systems do overlap in over more or less the whole flight.
+This can be seen in the upper right corner of the figure \ref{fig:PointMassAccInputPerformance} where due to the overlapping only the the values from the point mass system model is visible.
+The difference between in the errors between this system model and the normal point mass model is mostly due rounding errors of the simulation then due to really better estimation.
 This can be assumed due to the fact that this system model performs some time slightly better and some time slightly worse than the point mass system-
 Therefore there is no real gain in the implementation this way.
-In addition with this version the additional adjustment factor which was the system noise onto the acceleration can not be used.
-This means a additional parameter for tuning is lost.
-So it does not really make sense to use this in the final version.
+In addition in the plot of the first second of the estimation it can be seen that the acceleration estimation as more noise onto it than in the other system models.
+This is because the acceleration has with this implementation no model dependencies because it is taken directly as system input.
+With this the system noise on the acceleration has to resamble either the measuerement ore the system noise.
+In this implementation it was used to use bring the measurement noise into the system and therefore the low pass characteristics of the system noise are lost.
+In other words with a measurement as input a tuning parameter (either system ore measurement noise) which could infect the corresponding state value cannot be used.
+So there is no real gain in this implementation and it will therefore not be implemented in the final system model.
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccccc}
+\hline
+\multicolumn{1}{|c|}{State Variable} & \multicolumn{1}{c|}{Unit} & \multicolumn{1}{c|}{Max} & \multicolumn{1}{c|}{Min} & \multicolumn{1}{c|}{Mean} & \multicolumn{1}{c|}{Median} \\ \hline
+Height                            & $m$                         & 20.05                  & 7.21e-06                 & 4.71                    & 2.18                      \\
+Speed                             & $m/s$                       & 78.49                  & 0                        & 3.38                    & 2.40                      \\
+Accelration                       & $m/s^2$   			& 10.65                  & 0                        & 1.60                    & 1.43                     
+\end{tabular}
+\caption{Error of estimated state variables point mass with acceleration as input}
+\label{tab:ErrorPointMassAccelerationInput}
+\end{table}
 
+\newpage
 \section{Point Mass with offset and better calculated system noise}
-The better calculated system noise first by accessing it in the second was stated in \ref{ch:Implementation}
-This by calculating the discrete system noise matrix with the integration as well as
+The better calculated system noise for this estimation was calculated like stated in \ref{ch:Implementation}
+This by calculating the discrete system noise matrix Gd with the integration method as well as
 derive the perfect measurements and then low pass filter them to get better system noise vectors.
-This had to be used on a system which uses the acceleration offset as well in the state vector to get fully possible gain out of this implemenation.
+This had to be used on a system which uses the acceleration offset as well in the state vector to get fully possible gain out of this implementation.
+This results in a overall system performance like seen in figure \ref{fig:PointMassBetterNoisePerformance}
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8 \textwidth]{./Pictures/PointMassBetterNoisePerformance.jpg}
+ % PointMassOffsetPerformance.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Performance of point mass with better system noise over time}
+ \label{fig:PointMassBetterNoisePerformance}
+\end{figure}
+
+This system performs much like the one with acceleration offset as a state vector.
+The greatest difference can be seen in the first halve second where the acceleration is nearly perfect estimated.
+Also do the acceleration offset does not change as much as in the other system model.
+This because due to the better system noise the optimal estimation can be achieved with less effort since the influence of the acceleration offset is more clearly defined.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccccc}
+\hline
+\multicolumn{1}{|c|}{State Variable} & \multicolumn{1}{c|}{Unit} & \multicolumn{1}{c|}{Max} & \multicolumn{1}{c|}{Min} & \multicolumn{1}{c|}{Mean} & \multicolumn{1}{c|}{Median} \\ \hline
+Height                            & $m$                         & 9.74	                  & 8.11e-06                 & 1.28                    & 0.73                      \\
+Speed                             & $m/s$                       & 78.58                   & 0                        & 2.79                    & 1.85                      \\
+Accelration                       & $m/s^2$   			& 86.93                   & 4.07e-05                 & 3.57                    & 1.96                     \\
+Accelration Offset                & $m/s^2$   			& 88.60                   & 2.52e-05                 & 4.59                    & 2.59                     
+\end{tabular}
+\caption{Error of estimated state variables point mass with acceleration offset and better system noise}
+\label{tab:ErrorPointMassBetterNoise}
+\end{table}
+
 Figure \ref{fig:PointMassVSBetterNoise} shows that an over hall better estimation can be achieved with this tactic. 
 \begin{figure}[h!]
  \centering
@@ -137,15 +335,50 @@ Figure \ref{fig:PointMassVSBetterNoise} shows that an over hall better estimatio
 This mostly due the better system noise vector which are much better estimated this way.
 Also the additional effort to access this system model only occurs on the preparation,
 while it does have no effect on the computational effort during the flight itself.
-Non the less this expansion of the state estimation should be used any time if available.
+Non the less this approach of the state estimation should be used any time if available.
 
+\newpage
 \section{With and without GPS}
 It is not certain that the GPS will be working like stated before in the coming competitions.
 In addition the need more time be measured and can therefore arrive to late to be included correctly.
-There is the possibility back calculating to include such too late arrived measurements into the state estimation but they need a lot of calculational effort \cite{SimonDan2006Ose:}.
+There is the possibility back calculating to include such too late arrived measurements into the state estimation but they need a lot of computational effort \cite{SimonDan2006Ose:}.
 
 Because of this, the estimation without the GPS measurements are tested with a point mass system model to find its direct impacts.
 Figure \ref{fig:PointMassWithWithoutGPS} shows the plot of different estimation with and without working GPS.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8 \textwidth]{./Pictures/PointMassWihtoutGPSPerformance.jpg}
+ % PointMassOffsetPerformance.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Performance of point mass without GPS over time}
+ \label{fig:PointMassWithoutGPSPerformance}
+\end{figure}
+
+As expected the height is more away from the ground truth in the last five seconds plot than the one estimated with GPS measurements.
+Also the staircase like correction steps which come from the GPS measurements are missing.
+This behaviour was expected because the the GPS measurements are most important at great height were the remaining measurements lose their credibility.
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccccc}
+\hline
+\multicolumn{1}{|c|}{State Variable} & \multicolumn{1}{c|}{Unit} & \multicolumn{1}{c|}{Max} & \multicolumn{1}{c|}{Min} & \multicolumn{1}{c|}{Mean} & \multicolumn{1}{c|}{Median} \\ \hline
+Height                            & $m$                         & 31.20                  & 5.77e-05                 & 8.97                    & 5.20                      \\
+Speed                             & $m/s$                       & 78.58                  & 0                        & 6.35                    & 4.86                      \\
+Accelration                       & $m/s^2$   			& 17.78                  & 7.60e-05                 & 3.48                    & 2.34                     
+\end{tabular}
+\caption{Error of estimated state variables point mass without GPS measurements}
+\label{tab:ErrorPointMassWithoutGPS}
+\end{table}
+
+The table \ref{tab:ErrorPointMassWithoutGPS} which displays the errors from the estimations shows that as expected the error a greater in each value.
+Also the maximal height error of over 30 meter shows that the normal state estiamtor is really depending on the GPS measurements.
+
+\subsection{Wrong temperature gradient}
+This system has to depends strong on the pressure to calculate the height.
+Therefore the problem of a false temperature gradient does arise once again.
+For this estimations with different temperature gradients are plotted in figure \ref{fig:PointMassWithWithoutGPS}. 
 
 \begin{figure}[h!]
  \centering
@@ -155,29 +388,38 @@ Figure \ref{fig:PointMassWithWithoutGPS} shows the plot of different estimation 
  \label{fig:PointMassWithWithoutGPS}
 \end{figure}
 
-It shows that especially if the temperature gradient is chosen wrong and
+It shows that especially if the temperature gradient is chosen wrong (by just 5 percent) and
 therefore the height out of the pressure measurements is calculated wrong the error of the estimation rises significantly.
+With this the error increases with the ascending rocket when it can not be corrected by the GPS measuremnts.
+So the aim of the best performancing system has to be that it should not depend to much on those GPS measurements for a good state estimation.
 
+\newpage
 \section{Best Performance System}
-Out of the results from the test above the best fitting system can be defined.
-While the pitch angle did not have a positive effect on the estimation, the effect of the pressure as a state variable is also to risky to really use it.
-Also acceleration as input does not significantly improve the estimation and will therefore not be used.
+Out of the results from the test above the best fitting system is defined.
+The main goal is to achieve a robust state estimation as possible that does also match the given accuracy requirements.
+The pitch angle did not have an usefull positive effect on the estimation and is therefore not implemented.
+%the effect of the pressure as a state variable is also to risky to really use it.
+Also acceleration as input does not significantly improve the estimation.
 Therefore the best system consist out of the additional acceleration offset as a state vector as well as better calculated system noise.
 
-It was tested with and without GPS because it is not sure that this would function
 
-\subsection{With GPS}
 
-\subsection{Without GPS}
+
 
 \subsection{Robustness}
 The robustness is by far the most important property of the estimation.
 This in the concept of being able to function if a sensor fails which will be covered below as well as being robust against false system modeling 
 and especially falsely detected temperature gradients. So this will be discussed here.
 
+\subsubsection{Without GPS}
+As stated above this system should estimate the height without a significant raising in the error without the GPS measurements.
+Figure bla is a plot with the best system without the GPS measurements and different changing parameter (acceleration offset and temperature gradient).
+% Insert here figure of the best system which perform with and without GPS and different offsets ond acceleration as well different errors in Tgrad
+\subsubsection{Wrong temperature gradient}
+
 
 \subsection{Perfomance}
-Maybe in conclusion
+
 
 \section{Sensor Outfall}
 In addition to the test for the different system model implementation

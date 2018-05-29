@@ -1,9 +1,7 @@
-%How it will be Implemented
-
-%\section{Tipps/Notes}
-%make plots from the different sensors and the log data to show how it was 
-%produced an how it resembles the real data.
-%The simulation itself is implemented in Matlab as different .m files.
+In this chapter is described how the simulation is implemented in detail.
+This simulation was developed in matlab.
+This chapter is divided in two main parts.
+The first part discuses mainly the sensor models implementation while the second part is about the implementation of the state estimator itself.
 
 \section{Sensor Models}
 How the concept of the different sensor models work is described in chapter \ref{ch:Approach}.
@@ -38,7 +36,7 @@ While doing this the random values are kept small during the burning of the moto
 
 \subsubsection{Barometer}
 The measurements from the barometer are depending on the formula stated in chapter \ref{ch:Approach}.
-For reasons of simlicity the start pressure is choosen as the mean pressure at sea level which is 1013.35 hPa.
+For reasons of simplicity the start pressure is choosen as the mean pressure at sea level which is 1013.35 hPa.
 Also the temperature at the beginning is chosen as 288.15 degree Kelvin (15 degree Celcius) which also represents the mean value on the sea level.
 At least the temperature gradient is - 0.0065 °/m which is a common used value.
 For the state estimation in a test flight those values have to be determined before the start.
@@ -281,7 +279,16 @@ The matrix on each timestamp is rather easy to get in the simulation because the
 First the variance over the burning of the motor as well as over the up flight is calculated seperatly.
 After that those values are used to generate a noise vector for each measurements.
 In addition in the implementation the noise vector have the same length as all other used vectors.
-These noise measurements are then catognated into a diagonal noise matrices.
+These noise measurements are then catognated into a diagonal noise matrices like below.
+
+\begin{lstlisting}[caption={Mesurements noise matrix conagonating}]
+R_dyn = [GPSvar;ACLvar;HBM1var;HBM2var];         %Add the noise vectors into one matrix
+R_dyn_m = diag(R_dyn(:,1)');                     %Make a diagonal first diagonal matrix
+for n = 2:length(TimeVec)
+    R_dyn_m = cat(3,R_dyn_m,diag(R_dyn(:,n)'));  %Concatogenate all noise vectors 
+end
+\end{lstlisting}
+
 
 If the noise matrix is displayed as a diagonal matrix, 
 it equals in the assumption that the noises from the measurements are independent from each other.
@@ -328,9 +335,9 @@ As a second attempt since the system noise describes the capability of the value
 it can also be achieved due deviating the ground truth value vector.
 For this the following matlab code can be used.
 \begin{lstlisting}[caption={System noise generation with deviation}]
-ACEL = abs(diff(a));				% Deviating the gournd truth acceleration
-ACEL = filter(ones(1,100)*1/100,1,ACEL);	% Low pass filtering
-ACEL = [ACEL ACEL(end)];			% Maintain vector length
+ACEL = abs(diff(a));                            % Deviating the gournd truth acceleration
+ACEL = filter(ones(1,100)*1/100,1,ACEL);        % Low pass filtering
+ACEL = [ACEL ACEL(end)];                        % Maintain vector length
 \end{lstlisting}
 This shows that after the deviation the absolute value from those is taken since a variance cannot or should not be negative.
 After that the values are low pass filtered to smooth out more steady system noise description.
