@@ -397,41 +397,112 @@ So the aim of the best performancing system has to be that it should not depend 
 \section{Best Performance System}
 Out of the results from the test above the best fitting system is defined.
 The main goal is to achieve a robust state estimation as possible that does also match the given accuracy requirements.
-The pitch angle did not have an usefull positive effect on the estimation and is therefore not implemented.
-%the effect of the pressure as a state variable is also to risky to really use it.
+The pitch angle did not have an useful positive effect on the estimation and is therefore not implemented.
 Also acceleration as input does not significantly improve the estimation.
-Therefore the best system consist out of the additional acceleration offset as a state vector as well as better calculated system noise.
+Therefore the best system for the stated problem consist out of the additional acceleration offset as a state vector as well as better calculated system noise.
+Also despite the fact that the pressure is risky to implement as a state variable it is used in this implementation because it does increase the robustness significantly.
 
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8\textwidth]{./Pictures/BestSystemPerformance.jpg}
+ % BestSystemPerformance.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Performance over time}
+ \label{fig:BestSystemPerformance}
+\end{figure}
 
+Figure \ref{fig:BestSystemPerformance} shows again the performance over one whole flight.
+In he plot in the under right corner which shows the first second of the estimation can be seen that this system model has something like a settling time in the acceleration and speed.
+While this seems quite off on the first sight, it is well in the given requirements of one second settling time after the burnout.
+On the other hand it shows that the performance increases significantly after the acceleration and speed have settled.
+This increase in the accuracy of the estimation can also be seen in the table \ref{tab:ErrorBestPerformanceSystem}.
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccccc}
+\hline
+\multicolumn{1}{|c|}{State Variable} & \multicolumn{1}{c|}{Unit} & \multicolumn{1}{c|}{Max} & \multicolumn{1}{c|}{Min} & \multicolumn{1}{c|}{Mean} & \multicolumn{1}{c|}{Median} \\ \hline
+Height                            & $m$                         & 6.81	                  & 2.16e-06                 & 1.19                    & 0.82                      \\
+Speed                             & $m/s$                       & 42.39                   & 0                        & 2.1                     & 1.40                      \\
+Accelration                       & $m/s^2$   			& 126.42                  & 1.28e-05                 & 2.62                    & 0.90                     \\
+Accelration Offset                & $m/s^2$   			& 132.28                  & 3.42e-06                 & 2.28                    & 0.42                     \\
+Pressure		          & $hPa$   			& 0.66                    & 3.84e-06                 & 0,14                    & 0.11 
+\end{tabular}
+\caption{Error of estimated state variables of the best found system}
+\label{tab:ErrorBestPerformanceSystem}
+\end{table}
 
+While the median of the error form the estimated height shows a slightly lose in the accuracy in the height in comparison to the system model with better system noise alone,
+the accuracy of all other values has increased.
+This is especially impressive in the mean of the speed and acceleration, because they have great errors at the start with the shown settling problem which was shown in the plot above. 
+Also the height is with a median of just 0.82 and a maximal of 6.81 meter still most of the time in the aimed error of 2 meter maximal error.
 
 \subsection{Robustness}
-The robustness is by far the most important property of the estimation.
+The slight lose in accuracy was traded for a increase in robustness which is seen as more important due too different uncertainties.
 This in the concept of being able to function if a sensor fails which will be covered below as well as being robust against false system modeling 
 and especially falsely detected temperature gradients. So this will be discussed here.
 
 \subsubsection{Without GPS}
 As stated above this system should estimate the height without a significant raising in the error without the GPS measurements.
-Figure bla is a plot with the best system without the GPS measurements and different changing parameter (acceleration offset and temperature gradient).
-% Insert here figure of the best system which perform with and without GPS and different offsets ond acceleration as well different errors in Tgrad
+Figure \ref{fig:ErrorWitoutGPS} shows the height error of the best system model without GPS measurements.
+For comparison there is also the point mass system model estimation with and without the GPS measurements plotted.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8\textwidth]{./Pictures/ErrorPointMassBestSystemWithoutGPS.jpg}
+ % ErrorPointMassBestSystemWithoutGPS.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Error of point mass system and best system with and without GPS measuements}
+ \label{fig:ErrorWitoutGPS}
+\end{figure}
+
+This shows that the best found system model can estimate the height as good as the point mass system without the GPS measurements.
+On the other hand the point mass system model without the GPS measurements does lose accuracy as the rocket rises higher above ground.
+
 \subsubsection{Wrong temperature gradient}
+As already stated this system model should also have some robustness against a falsely defined temperature gradient. 
+It has to be said that in the simulation the difference of the real and the used temperature gradient is known and the noises are adjusted properly.
+This will maybe not be the case in the real flight.
+Table \ref{tab:ErrorChangingTempGradWithWithoutGPS} shows the errors which the state estimation makes when the temperature gradient is wrong with and without working GPS.
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{ccc}
+\hline
+\multicolumn{1}{|c|}{Offset} & \multicolumn{1}{|c|}{Mean}& \multicolumn{1}{|c|}{Median} \\ \hline
+Normal with GPS 	& 1.19 		& 0.82\\
+Normal without GPS	& 1.43	 	& 1.11\\
+5\% off with GPS 	& 2.77	 	& 2.46\\
+5\% off without GPS 	& 3.39	 	& 3.24\\
+10\% off with GPS 	& 6.32	 	& 7.04\\
+10\% off without GPS 	& 7.74 		& 7.61
+\end{tabular}
+\caption{Error of the height in meter by changing temperature gradient with and without GPS measurements}
+\label{tab:ErrorChangingTempGradWithWithoutGPS}
+\end{table}
 
-\subsection{Perfomance}
-
+First off all it can be seen that with the correct temperature gradient and no GPS measurements,
+the error of the height estimation is still clearly below the two meter margin.
+In addition the median of the height error does only increase by around one meter it no GPS is available.
+As expected the error rises with with a wrong temperature gradient.
+But also the robustness of this system model can be seen, if there are no GPS measurements
+and the temperature gradient is 10 percent off over the whole flight it only results in a median error of the height estimation of 7.61 meter.
 
 \section{Sensor Outfall}
 In addition to the test for the different system model implementation
 the possibility to simulate outfalls of the different sensors at start or during the flight was implemented for the last system model.
-This by setting the measurement noises of these sensors to the maximal value (represental to infinity).
+For this the corresponding measurement noise of this sensors values can be set to infinity at given timestep.
 
+% Fo this with a table to show the error or with a plot if visual is better i don't no really 
 \subsection{GPS Outfall}
-The outfall of a GPS was also discussed above which would represent a state estimation with no GPS measurements at all.
-In addition will here be discussed how the state estimation is affected if the GPS measurements are lost during the flight.
-
-% Here comes a plot 
+The outfall of the GPS was already discussed above which would represent a state estimation with no GPS measurements at all.
+If the GPS falls out during the flight the behaviour of the state estimation should resemble the one above after the outfall.
 
 \subsection{Barometer Outfall}
+The barometer is therefore special that if all barometer are lost, the height which is calculated out of the state vector pressure has also to be set to failed.
+\subsubsection{One Barometer fails}
+One Barometer does not really make any difference
+\subsubsection{All Barometer fail}
+All barometer do also not make a that great differences
 \subsection{Accelerometer Outfall}
+This makes noise onto the acceleration estimation
 \subsection{Gyrometer Outfall}
+Does not make any great difference

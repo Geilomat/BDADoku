@@ -1,12 +1,21 @@
 \section{Derived Solution}
-Here comes the best finded state estimator loop/solution and how an why it works
-Again Just a quick reminder due the main solution derivision was made in the tests.
-
+The solution for the stated problem which was found over this thesis can be summaryzed as follows.
+The algorithm uses a discrete Kalman-filter which has dynamic noise matrices for the measurements as well as the system.
+In the measurements noise matrices are the noises for the GPS and the Pressure set to infinity while no measurements from the GPS module or the Barometers are available.
+The same concept is used if it is detected that a sensor is not working properly.
+The state vector which describes the estimated system consist of the height, speed, acceleration, acceleration offset and the pressure.
+To work in the optimal possible test flights with the used sensors have to be made and the noise matrices have to be calculated out of the measured data.
+This provides an optimal trade off between robustness and accuracy and a small computational effort as possible.
 
 \section{Comparison Solution/Requirements}
-Compare the derived solution to the requirements
+To how good the given requirements are met can be described by filling out the requirements table from the chapter \ref{ch:Introduction}
+
+
 
 \section{Outlook}
+As always there are points which could be developed further for better results which are stated here.
+\subsection{Back calculation for later mesurements espacially GPS measurements}
+\subsection{}
 Different things which can be done differently in the future
 - Exctented Kalman filter
 - More better documented test flights.
@@ -15,8 +24,12 @@ Different things which can be done differently in the future
 - Calculating the pressure noise as good as possible find out how to detect how rwong the temperatur gradient is
 
 \section{Thanks}
-Thanks to the Aris Team espacially Thomas and Fabian
-Also Thanks to Lukas and Papa Moll
+First of all credits have to be given to the whole ARIS team which supported this thesis with support
+and great parts of a already functioning simulation which could be used to generated the trajectories.
+Special thanks goes to Thomas bla and Fabian bla which provided there knowledge and the logging data from the test flights.
+But also the EPFL team of the Matterhorn competition has to be thanked for the provided logging data.
 
-And to the EPFL team for the test flight data
-
+\section{Reflection}
+This thesis consist of theory like no one before that I have written.
+Due to this, it was a quite new experience. 
+This because the whole thesis consisted off concepts and there implementation in a simulation.
