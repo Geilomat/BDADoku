@@ -421,11 +421,11 @@ This increase in the accuracy of the estimation can also be seen in the table \r
 \begin{tabular}{cccccc}
 \hline
 \multicolumn{1}{|c|}{State Variable} & \multicolumn{1}{c|}{Unit} & \multicolumn{1}{c|}{Max} & \multicolumn{1}{c|}{Min} & \multicolumn{1}{c|}{Mean} & \multicolumn{1}{c|}{Median} \\ \hline
-Height                            & $m$                         & 6.81	                  & 2.16e-06                 & 1.19                    & 0.82                      \\
-Speed                             & $m/s$                       & 42.39                   & 0                        & 2.1                     & 1.40                      \\
-Accelration                       & $m/s^2$   			& 126.42                  & 1.28e-05                 & 2.62                    & 0.90                     \\
-Accelration Offset                & $m/s^2$   			& 132.28                  & 3.42e-06                 & 2.28                    & 0.42                     \\
-Pressure		          & $hPa$   			& 0.66                    & 3.84e-06                 & 0,14                    & 0.11 
+Height                            & $m$                         & 7.39	                  & 2.01e-06                 & 1.26                    & 0.92                      \\
+Speed                             & $m/s$                       & 24.87                   & 0                        & 1.61                    & 1.26                      \\
+Accelration                       & $m/s^2$   			& 41.66                   & 4.86-06                  & 1.28                    & 0.70                     \\
+Accelration Offset                & $m/s^2$   			& 41.70                   & 5.36e-06                 & 1.01                    & 0.61                     \\
+Pressure		          & $hPa$   			& 0.80                    & 2.49e-06                 & 0.14                    & 0.12 
 \end{tabular}
 \caption{Error of estimated state variables of the best found system}
 \label{tab:ErrorBestPerformanceSystem}
@@ -467,8 +467,8 @@ Table \ref{tab:ErrorChangingTempGradWithWithoutGPS} shows the errors which the s
 \centering
 \begin{tabular}{ccc}
 \hline
-\multicolumn{1}{|c|}{Offset} & \multicolumn{1}{|c|}{Mean}& \multicolumn{1}{|c|}{Median} \\ \hline
-Normal with GPS 	& 1.19 		& 0.82\\
+\multicolumn{1}{|c|}{Temperature gradient correctness} & \multicolumn{1}{|c|}{Mean}& \multicolumn{1}{|c|}{Median} \\ \hline
+Normal with GPS 	& 1.26 		& 0.92\\
 Normal without GPS	& 1.43	 	& 1.11\\
 5\% off with GPS 	& 2.77	 	& 2.46\\
 5\% off without GPS 	& 3.39	 	& 3.24\\
@@ -490,19 +490,81 @@ and the temperature gradient is 10 percent off over the whole flight it only res
 In addition to the test for the different system model implementation
 the possibility to simulate outfalls of the different sensors at start or during the flight was implemented for the last system model.
 For this the corresponding measurement noise of this sensors values can be set to infinity at given timestep.
+The most possible way was found that a sensor fails during the burning of the motor due to the vibration.
+Therefore the here discussed scenarios are all the same with the corresponding sensor failing at the third second of the flight while the motor is burning.
 
-% Fo this with a table to show the error or with a plot if visual is better i don't no really 
 \subsection{GPS Outfall}
 The outfall of the GPS was already discussed above which would represent a state estimation with no GPS measurements at all.
 If the GPS falls out during the flight the behaviour of the state estimation should resemble the one above after the outfall.
+The test have shown that this is the case.
+If the GPS falls out at second three the mean of the height error rises to 1.42 meter while the median rises to 1.11 meter.
+The other state variable error do rise also by a small amount but as excpected the pressure estiamtion error stays the same.
+These values show that the estimation is just slightly better then without any GPS at all.
 
 \subsection{Barometer Outfall}
-The barometer is therefore special that if all barometer are lost, the height which is calculated out of the state vector pressure has also to be set to failed.
+The barometer is therefore special that if all barometer are lost, 
+the height which is calculated out of the state vector pressure has also to be set to failed.
+
 \subsubsection{One Barometer fails}
-One Barometer does not really make any difference
+The loss of one barometer does already make a significant change into the estimation.
+For example the mean of the height error rises to 1.78 meter while the median also rises to 1.39 meter.
+The difference between the mean and the median show that there occur more outliers if just one barometer is active.
+This can also be seen in the error of the barometer estimation which rises to 0.2 hPa for the mean and 0.16 hPa for the median.
+
 \subsubsection{All Barometer fail}
-All barometer do also not make a that great differences
+More interesting is how the state estimator is performing when no barometer measurements are available at all.
+As expected the error of the barometer estimation does rise onto great values which are around 12 hPa for the mean and 11 hPa for the median.
+But on the other hand the accuracy of the height estimation does actually rise to the more or less values then with two working barometers.
+This behaviour can be explained by the still working GPS.
+If both barometers fall out and therefore there is no height calculated out of the pressure the height from the 
+GPS sensor gets more weightend due to be the only measurements on the height.
+
+\newpage
 \subsection{Accelerometer Outfall}
-This makes noise onto the acceleration estimation
+The influence of an outfall of the accelerometer can be well visited in the plots of figure \ref{fig:PerformanceAccOutfall}.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8\textwidth]{./Pictures/BestSystemPerformanceAccOutfall.jpg}
+ % ErrorPointMassBestSystemWithoutGPS.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Performance over a whole flight with failing accelerometer at second 3}
+ \label{fig:PerformanceAccOutfall}
+\end{figure}
+
+It shows how the acceleration estimation starts to change in great manner after the third second.
+But as it can be seen in the plot of the last five seconds the height estimation does not change in a great manner
+compared to the estimation with acceleration measurements during the whole flight.
+The calculated height errors do confirm this by values of 1.54 for the mean and 1.20 for the median.
+The pressure estimation is not impacted as it was expected.
+Also the error of the acceleration does rise by around 10 $m/s^2$ and does therefore also effect the speed estimation.
+
 \subsection{Gyrometer Outfall}
-Does not make any great difference
+Due to the fact that the pitch angle does not have such a great impact onto the acceleration as already stated above,
+the effect onto the state estimation if the gyrometer fails is also quite small.
+First of all the error which is made in the estimation of the acceleration should be examined.
+Against the excpetation it does rise by around 1$m/s^1$ for each the mean and also the median value.
+Due to that the estimation of the height does also lose some accuracy and is with 1.39 m for the mean
+and 1.11 m for the mean resamble the same situation as if there would be no GPS measurements.
+This shows that while it is not necessary to estimate the pitch angle the measurements of the gyrometer should still be included for an optimal estimation.
+
+\newpage
+\subsection{Multiple Sensor Outfall}
+A requirement which was stated is that the sensor fusion should be able to work without 2-3 sensors.
+Two sensors was already discussed like if both barometer or the accelerometer 
+(which would also resemble the outfall of the gyrometer, since those measurements would not be included either) fails.
+An additional test should therefore be what happens when three sensor fail.
+For this scenario the two barometers and the GPS were chosen to fail because if they fail the observably of the point mass system is still secured.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=.8\textwidth]{./Pictures/BestSystemPerformanceAccOutfall.jpg}
+ % ErrorPointMassBestSystemWithoutGPS.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Performance over a whole flight with both barometer and the gyrometer failed}
+ \label{fig:PerformanceMOutfall}
+\end{figure}
+
+With those failed sensors the estimation does still work quite well which can be seen in the plots of the figure \ref{fig:PerformanceMOutfall}.
+This is because the GPS which provides the most accurate measurements is still working.
+Due to that the error of the height estimation does just rise slight amount to 1.54 m for the mean and 0.97 for the median.
+For comparison if the GPS sensor does also fail the height estimation does lose accuracy by a great amount and so the error rises to 63 meter for the mean and 26 meter for the median.
+Also it should be said that the height error does end to 531.78 meter which is quite far off.

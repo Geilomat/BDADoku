@@ -1,3 +1,7 @@
+After the test were made to find the best solution for the state estimation
+the found solution will be compared to the requirements.
+After that follows a outlook for further development and brief reflection on this project itself.
+
 \section{Derived Solution}
 The solution for the stated problem which was found over this thesis can be summaryzed as follows.
 The algorithm uses a discrete Kalman-filter which has dynamic noise matrices for the measurements as well as the system.
@@ -8,25 +12,81 @@ To work in the optimal possible test flights with the used sensors have to be ma
 This provides an optimal trade off between robustness and accuracy and a small computational effort as possible.
 
 \section{Comparison Solution/Requirements}
-To how good the given requirements are met can be described by filling out the requirements table from the chapter \ref{ch:Introduction}
+To how good the given requirements are met can be described by filling out the requirements table from the chapter \ref{ch:Introduction}.
+This can be seen in the table \ref{tab:RequirementsFilledOut}.
 
-
+ \begin{table}[h]
+ \centering
+ \begin{tabular}{|l|l|l|l|}	
+ \hline	
+ \bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Result} \\ \hline
+ System Load   & \# Calculation steps per loop & < 5000 & bla \\ \hline
+ Precision     & Error between estimation and ground truth  & < 2m in Z & Median 0.92 m  \\ \hline
+ Settling Time & Time from first reliable to optimal estimation  & < 1 s &  0.2 m \\ \hline
+ Reliability   & Functioning Estimation with \#failed sensors & 2-3 sensors & 3 sensors \\ \hline	
+ Modularity    & Effort needed to change a sensors & < 10 h work &  5-10 hours \\ \hline
+ \end{tabular}	
+ \caption{Requirements table filled out}
+ \label{tab:RequirementsFilledOut}
+ \end{table}
+ 
+ \subsection{System Load}
+ 
+ 
+ \subsection{Precision}
+ The test have shown that the mean and the median of the height error are with 1.29 and 0.92 meter clearly under the aimed 2 meter.
+ Despite of that there are peaks during the estimation where the error rises above the aimed 2 meter.
+ Those result in error around 2 to 4 meter and can even sometimes rise to 6 to 7 meter.
+ While this does not exactly match the requirement some improvement with sensors adjustment (faster accurater GPS and Pressure) should be possible.
+ 
+ \subsection{Settling Time}
+ There could no real settling time be defined in the tests because the error does rise above the aimed two meters during the flight with the peaks.
+ But if the settling time is used in terms of the time until the optimal possible estimation,
+ it can be seen in the plot from the figure \ref{fig:BestSystemPerformance} that this is around 0.8 seconds after the ignition.
+ After this moment the estimation for the acceleration and speed are settled in which means the height estimation should be at its best possible estimation.
+ 
+ \subsection{Reliability}
+ The found sensor fusion algorithm does exceed the reliability. 
+ It does work quite well with one or two failed sensors and can also estimate the height properly if the ``right'' three sensor do fail.
+ If the system loses all its height measurements the error does rise above 500 meters at the end and is therefore no more usefull.
+ But this remains into the given borders of the requirements
+ 
+ \subsection{Modularity}
+ The modularity is problematic to evaluate in clear values.
+ With the derived simulation it should be possible do adjust the algorithm for a new sensor quite fast (5 to 10 hours of work), 
+ given that the simulation is known and enough tests with the new sensors are made an logged.
+ With this the data could be used to derive the needed sensor model and the corresponding noise matrices are calculated automatically during the simulation.
+ 
 
 \section{Outlook}
 As always there are points which could be developed further for better results which are stated here.
+
+\subsection{More better documented test flights}
+First of all more and better documented test flight with the used sensors should be made.
+These would result in better sensor models and could therefore increase the accuracy of the derived noise matrices.
+Also the found algorithm should be ported into an embedded system and then be tested in those flights.
+With those the algorithm itself could be validate and also adjusted, which should result in a over all more reliable state estimation
+
+\subsection{Slower cycle time}
+An quite interesting change could be to reduce the frequency of the control cycle.
+This would open the door for other state estimation algorithms which require more compute power.
+
+\subsubsection{Extended Kalman filter}
+For example a extended kalman filter could be implemented and with its help the non linear dependencie of the height from the pressure
+could be described directly by the system model.
+In addition the force from the motor as well as the drag from the air breaks could with this be included as system inputs.
+Because they are also non linear and time depending (since the weight of the rocket does change over the flight).
+
 \subsection{Back calculation for later mesurements espacially GPS measurements}
-\subsection{}
-Different things which can be done differently in the future
-- Exctented Kalman filter
-- More better documented test flights.
-- Back calculation for later mesurements espacially GPS measurements
-- Slower sampling
-- Calculating the pressure noise as good as possible find out how to detect how rwong the temperatur gradient is
+Also if there is more computing time for the sensor fusion the principal of including to late arrived measurements could be used.
+
+\subsection{Temperature gradient}
+Calculating the pressure noise as good as possible find out how to detect how wrong the temperature gradient is
 
 \section{Thanks}
 First of all credits have to be given to the whole ARIS team which supported this thesis with support
 and great parts of a already functioning simulation which could be used to generated the trajectories.
-Special thanks goes to Thomas bla and Fabian bla which provided there knowledge and the logging data from the test flights.
+Special thanks goes to Thomas and Fabian which provided there knowledge and the logging data from the test flights.
 But also the EPFL team of the Matterhorn competition has to be thanked for the provided logging data.
 
 \section{Reflection}
