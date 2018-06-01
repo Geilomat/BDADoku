@@ -9,7 +9,7 @@ Following here, the implementation which is used in the simulation will be state
 First in general for all sensors, following by the different characteristics of each sensor.
 
 \subsection{Perfect Sensor}
-In general, the perfect sensor data are calculated like stated in chapter \ref{ch:Approach}.
+To calculate the prefect sensor data the trajectory is put into the equation which were defined before.
 In figure \ref{fig:GeneratedPerfectSensor} those generated sensor data as well as the trajectory used for this can be seen.
 
 \begin{figure}[h!]
@@ -28,25 +28,27 @@ The unit for the acceloration in this simulation is meter per second squared.
 
 \subsubsection{Gyrometer}
 As stated before the pitch angle can not be directly generated.
-But if the  data from the test flights are visited. It can be seen that the angle stays more or less the same wile the motor is burning.
-This make sense because during this time the main acceleration comes from one determinet direction and stabilices the rocket.
+But if the data from the test flights are visited. It can be seen that the angle stays more or less the same wile the motor is burning.
+This make sense because during this time the main acceleration comes from one determinet direction and stabilises the rocket.
 After the burnout the pitch angle does change more or less randomly depending on strength and direction of the wind that hits the rocket.
 To reanimate this the values are generated randomly and the low pass filtered with a moving average filter to represent that behaviour.
 While doing this the random values are kept small during the burning of the motor and exceed afterwards to higher values.
 
 \subsubsection{Barometer}
-The measurements from the barometer are depending on the formula stated in chapter \ref{ch:Approach}.
-For reasons of simplicity the start pressure is choosen as the mean pressure at sea level which is 1013.35 hPa.
+The measurements from the barometer are depending on the atmospheric model which used in this simulation.
+For reasons of simplicity the start pressure is chosen as the mean pressure at sea level which is 1013.35 hPa.
 Also the temperature at the beginning is chosen as 288.15 degree Kelvin (15 degree Celcius) which also represents the mean value on the sea level.
 At least the temperature gradient is - 0.0065 °/m which is a common used value.
-For the state estimation in a test flight those values have to be determined before the start.
+For the state estimation in a test flight those values have to be determined before the start, especially the temperature gradient.
+Also since the barometers do sample at 100 Hz the measurements have to be down sampled.
+Like in GPS below this is also achieved by a zero order hold conversion instead of direct down sampling
 
 \subsubsection{GPS}
 As stated in chapter \ref{ch:Approach} the GPS signal is just the height with a different sampling time. 
 To maintain the vectors length which simplifies the later use in the estimation algorithm,
 the signal is acquired with a zero order hold conversion instead of a down sampling. 
 
-% Add code for the zero order Holde convertion
+%@ToDo: Add code for the zero order Holde convertion
 
 \subsection{Noise}
 To generate the noise out of the data from the test flight, this has first to be extracted.
@@ -55,7 +57,7 @@ but it should have more or less the same properties between those events.
 Depending on this, the data vector have first to be separated in those different sections.
 For this the accelorometer measurements are iterated to find the time stamps on which those events happen like in figure \ref{fig:AccelerationMarks}.
 
-%% picture of acceloration of z axis with icognition, burnout and parachute ejection are marked
+
 \begin{figure}[h!]
  \centering
  \includegraphics[width=0.8\textwidth]{./Pictures/AccelerationMarks.jpg}
@@ -65,9 +67,9 @@ For this the accelorometer measurements are iterated to find the time stamps on 
 \end{figure}
 
 
-If done so, polynoms are fitted on this measurements with the least squared error method.
-Those polynoms represent the function which is assumed to be the noiseless data with possible offsets.
-So if now the test flight data is subtracted by those polynomial curves which results in the noise without a mean.
+If done so, polynomials of the order two are fitted on this measurements with the least squared error method.
+Those polynomials represent the functions /the values which are assumed to be the noiseless data with possible offsets.
+So if now the test flight data is subtracted by those polynomials curves this results in the measurements with zero mean.
 From this point on this noise can be examined on its parameters, like the power density, the probability distribution and the variance figure \ref{fig:PF_AC_HIST_Accel}.
 
 %% pictue of autocorrelation, histogramm etc from sensor data noise
@@ -81,8 +83,10 @@ From this point on this noise can be examined on its parameters, like the power 
 
 
 This noise data can now used tho solve the yule walker equation to get an AR-model.
-For this the aryule function in can be used which estimates an AR-model of the order N as well as the variance directly out of the noise vector.
-But first, the data has to be resampled so that the AR-models can be used proper in the simulation.
+For this the aryule function can be used which estimates an AR-model of the order N as well as the variance directly out of the noise vector.
+For this it does estimate the autocorrelation out of the given noise vector.
+For the best possible results the corresponding data form all test flights are put together and used as one great noise vector.
+But first, the data has to be reseampled so that the AR-models can be used proper in the simulation.
 With those AR-models, the noise can be regenerated by filtering white noise with the correct variance.
 This generated noise can now be compared to the noise form the test flight data.
 
@@ -106,7 +110,8 @@ Especially the data before the ignition are help full, because the value that sh
 
 \subsubsection{Gyrometer}
 For the gyrometer noise a separate script was written to calculate the proper pitch angle and filter out the offset before generating the AR-model.
-This because the gyrometer measurements which are available are in degree per second and have therefore to be integrated before they resamble the correct pitch angle.
+This because the gyrometer measurements which are available are in degree per second
+and have therefore to be integrated before they resemble the correct pitch angle.
 In addition it is complicated to define which part of the measurements are noise and which is the ground truth.
 It was found that the estimated AR- model could not regenerated the noise with proper capacities.
 Because of that, the noise has to be low pass filter afterwards to resemble the noises better.
@@ -114,20 +119,18 @@ For this task a IIR filter of order 200 was found best.
 Therefore those measurements have to be properly handled.
 
 \subsubsection{Barometer}
-First there are two or more barometer which sample on different frequencies ant have therefore also different accuracy's.
-This is represented in the way that the variance of the noise from the slower sampled barometer is kept on a smaller value,
-than that of the sensor which is faster sampled.
+The barometer noise itself has no real capacities which were not already discussed before.
 
 \subsubsection{GPS}
-The GPS noise capacities were found with measurements that were taken for a longer time period while the GPS receiver at the same place.
+The GPS noise capacities were found with measurements that were taken for a longer time period while the GPS receiver stayed at the same place.
 So the noise will have the same capacities over the whole flight.
 This due to the assumption that the GPS measurements should be independent from the motors vibration and the rockets posture changes.
 This should be suitable as long as the receiver does not lose its fix.
 
 \newpage
 \subsection{Real Sensor}
-To now generated the real sensor data, the different noises have to be generated like stated above.
-For this a vector of normal distributed random values is generated and multiplied by the square root of the corresponding variance.
+To now generated the real sensor data, the different noises have to be generated with the calculated AR-models and the perfect sensor data.
+For this a vector of normal distributed random values is generated and multiplied by the square root of the corresponding variance (hence the standard deviation).
 This white noise is now filtered by the corresponding AR-model and can then be added onto the corresponding perfect sensor data.
 This now results in the real sensor data.
 
@@ -142,7 +145,7 @@ This now results in the real sensor data.
 In figure \ref{fig:AccelPerfVsReal} the different generated values as well as the data from a test flight can be seen.
 The time vector from the test flight was stretched by the factor two to make the observation easier.
 Also it has to be said that the test flight was with a smaller rocket which flew only at an apogee of around 300 meters.
-This explains why the acceleration is as great as in the generated data and why the time vector had to be stretched.
+This explains why the acceleration is not as great as in the generated data and why the time vector had to be stretched.
 But the plot shows that the noise as well as the perfect data resemble the acceleration from the test flight in a appropriate way.
 
 \newpage
@@ -156,9 +159,10 @@ But the plot shows that the noise as well as the perfect data resemble the accel
 \end{figure}
 Figure \ref{fig:PtichPerVSReal} shows the generate gyrometer data.
 Like in the acceleration plot the time vector from the test flight data was adjusted for better observability.
-It should also be explained due to the proberty of the pitch angle (more or less random depening ond air current etc) that the generated realistic pitch angle must not resamble the measured angle in its specific value.
+It should also be explained due to the proberty of the pitch angle (more or less random depening on air current etc) 
+that the generated realistic pitch angle must not resamble the measured angle in its specific value.
 Important is in first hand that the noises have the same capacities which they do.
-Also it can be seen that the assumption that the angle does no change great during the burning of the motor is despite a quick change at the start appropriate.
+Also it can be seen that the assumption that the angle does no change great during the burning of the motor is despite a quick change at the start is appropriate.
 
 \newpage
 \subsubsection{Barometer}
@@ -191,13 +195,12 @@ It can be seen that the test data does also resemble the noise from the generate
 
 
 \section{State Estimation}
-As stated the used state estimator is a kalman filter with dynamic noises in the measurements as well in the systems.
+As stated the used state estimator is a discrete Kalmanfilter with dynamic noises on the measurements as well as on the systems.
 For this the noise matrices as well as the used loop is described below.
 
 \subsection{System Model}
 The models are modelled as stated in chapter \ref{ch:Approach} but from this different uses can be made out of this.
 For this simulation 8 models were implemented with each different capability.
-
 Due to this, these different implementation are tested and evaluated in the next chapter.
 \subsection{Adjustment}
 Taken into account the above stated noise capacities of the measurements there were new systems developed which should hopefully result in better results.
@@ -274,12 +277,12 @@ In addition the y vector would lose its acceleration measurements and the output
 \end{align*}
 
 \subsection{Measurements noise}
-The matrix on each timestamp is rather easy to get in the simulation because the perfect measurements are known.
+The matrix on each time stamp is rather easy to get in the simulation because the perfect measurements are known.
 
-First the variance over the burning of the motor as well as over the up flight is calculated seperatly.
+First the variance over the burning of the motor as well as over the up flight is calculated separately.
 After that those values are used to generate a noise vector for each measurements.
 In addition in the implementation the noise vector have the same length as all other used vectors.
-These noise measurements are then catognated into a diagonal noise matrices like below.
+These noise measurements are then concatenated into a diagonal noise matrices like below.
 
 \begin{lstlisting}[caption={Mesurements noise matrix conagonating}]
 R_dyn = [GPSvar;ACLvar;HBM1var;HBM2var];         %Add the noise vectors into one matrix
@@ -316,7 +319,7 @@ In other words the system noise describes how far away from the predicted value 
 For the system noise the behaviour of the system during the flight has to be examined.
 This can be done in different ways.
 The first way would be to view the different ground truth curves of those state variables,
-which do have system noise acting on them (acceleration, pitch angel, pressure if linearized).
+which do have system noise acting on them (acceleration, pitch angel, pressure if linearised).
 \begin{figure}[h]
  \centering
  \includegraphics[width=.8\textwidth]{./Pictures/PitchAnglePlot.jpg}
