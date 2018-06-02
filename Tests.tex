@@ -421,7 +421,7 @@ Also despite the fact that the pressure is risky to implement as a state variabl
 \end{figure}
 
 Figure \ref{fig:BestSystemPerformance} shows again the performance over one whole flight.
-In he plot in the under right corner which shows the first second of the estimation can be seen that this system model has something like a settling time in the acceleration and speed.
+In the plot in the under right corner which shows the first second of the estimation can be seen that this system model has something like a settling time in the acceleration and speed.
 While this seems quite off on the first sight, it is well in the given requirements of one second settling time after the burnout.
 On the other hand it shows that the performance increases significantly after the acceleration and speed have settled.
 This increase in the accuracy of the estimation can also be seen in the table \ref{tab:ErrorBestPerformanceSystem}.
@@ -448,7 +448,7 @@ Also the height is with a median of just 0.82 meter and a maximal of 7.39 meter 
 
 \subsection{Robustness}
 The slight lose in accuracy was traded for a increase in robustness which is seen as more important due too different uncertainties.
-This in the concept of being able to function if a sensor fails which will be covered below as well as being robust against false system modeling 
+This in the concept of being able to function if a sensor fails which will be covered below as well as being robust against false system modelling 
 and especially falsely detected temperature gradients. So this will be discussed here.
 
 \subsubsection{Without GPS}
@@ -468,7 +468,7 @@ This shows that the best found system model can estimate the height as good as t
 On the other hand the point mass system model without the GPS measurements does lose accuracy as the rocket rises higher above ground.
 
 \subsubsection{Wrong temperature gradient}
-As already stated this system model should also have some robustness against a falsely defined temperature gradient. 
+This system model should also have some robustness against a falsely defined temperature gradient. 
 It has to be said that in the simulation the difference of the real and the used temperature gradient is known and the noises are adjusted properly.
 This will maybe not be the case in the real flight.
 Table \ref{tab:ErrorChangingTempGradWithWithoutGPS} shows the errors which the state estimation makes when the temperature gradient is wrong with and without working GPS.
@@ -497,7 +497,7 @@ But also the robustness of this system model can be seen, if there are no GPS me
 and the temperature gradient is 10 percent off over the whole flight it only results in a median error of the height estimation of 7.61 meter.
 
 \section{Sensor Outfall}
-In addition to the test for the different system model implementation
+In addition to the tests for the different system model implementation
 the possibility to simulate outfalls of the different sensors at start or during the flight was implemented for the last system model.
 For this the corresponding measurement noise of this sensors values can be set to infinity at given time step.
 The most possible way was found that a sensor fails during the burning of the motor due to the vibration.
@@ -523,7 +523,7 @@ This can also be seen in the error of the barometer estimation which rises to 0.
 
 \subsubsection{All Barometer fail}
 More interesting is how the state estimator is performing when no barometer measurements are available at all.
-As expected the error of the barometer estimation does rise onto great values which are around 12 hPa for the mean and 11 hPa for the median.
+As expected the error of the barometer estimation does rise onto great values which are around 12 hecto Pascal for the mean and 11 hecto Pascal for the median.
 But on the other hand the accuracy of the height estimation does actually rise to the more or less values then with two working barometers.
 This behaviour can be explained by the still working GPS.
 If both barometers fall out and therefore there is no height calculated out of the pressure the height from the 
@@ -544,7 +544,7 @@ The influence of an outfall of the accelerometer can be well visited in the plot
 It shows how the acceleration estimation starts to change in great manner after the third second.
 But as it can be seen in the plot of the last five seconds the height estimation does not change in a great manner
 compared to the estimation with acceleration measurements during the whole flight.
-The calculated height errors do confirm this by values of 1.54 for the mean and 1.20 for the median.
+The calculated height errors do confirm this by values of 1.54 meter for the mean and 1.20 meter for the median.
 The pressure estimation is not impacted as it was expected.
 Also the error of the acceleration does rise by around 10 $m/s^2$ and does therefore also effect the speed estimation.
 
@@ -553,8 +553,8 @@ Due to the fact that the pitch angle does not have such a great impact onto the 
 the effect onto the state estimation if the gyrometer fails is also quite small.
 First of all the error which is made in the estimation of the acceleration should be examined.
 Against the expectation it does rise by around 1$m/s^1$ for each the mean and also the median value.
-Due to that the estimation of the height does also lose some accuracy and is with 1.39 m for the mean
-and 1.11 m for the mean resemble the same situation as if there would be no GPS measurements.
+Due to that the estimation of the height does also lose some accuracy and is with 1.39 meter for the mean
+and 1.11 meter for the mean resemble the same situation as if there would be no GPS measurements.
 This shows that while it is not necessary to estimate the pitch angle the measurements of the gyrometer should still be included for an optimal estimation.
 
 \newpage

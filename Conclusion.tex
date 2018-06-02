@@ -3,9 +3,9 @@ the found solution will be compared to the requirements.
 After that follows a outlook for further development and brief reflection on this project itself.
 
 \section{Derived Solution}
-The solution for the stated problem which was found over this thesis can be summaryzed as follows.
+The solution for the stated problem which was found over this thesis can be summarised as follows.
 \begin{itemize}
- \item The algorithm uses a discrete Kalman-filter which has dynamic noise matrices for the measurements as well as the system.
+ \item The algorithm uses a discrete Kalmanfilter which has dynamic noise matrices for the measurements as well as the system.
  \item In the measurements noise matrices are the noises for the GPS and the Pressure set to infinity while no measurements from the GPS module or the Barometers are available.
 The same concept is used if it is detected that a sensor is not working properly.
  \item The state vector which describes the estimated system consist of the height, speed, acceleration, acceleration offset and the pressure.
@@ -38,7 +38,7 @@ This can be seen in the table \ref{tab:RequirementsFilledOut}.
  Since the used system model consist out of five state variables and there are 5 measurements at the input (GPS, Accelerometer, Barometer 1, Barometer 2 and height out of Pressure) most matrices used are a 5x5 matrix.
  Therefore there multiplication with each other need 225 calculation steps (4 additions and 5 multiplication for each of the 25 values in the resulting matrix).
  Also the matrix inversion with the Gauss-Jordan elimination has a complexity of $2^3$ which result in about 125 calculation for a 5x5 matrix.
- In addition two equations which do not come from the kalman filter equations itself have to be calculated.
+ In addition two equations which do not come from the Kalmanfilter equations itself have to be calculated.
  These are the inclusion of the pitch angle on the acceleration measurements to get the pure vertical acceleration and 
  the calculation of the height out of the state vector which contains the actual pressure to include them into the state estimation.
  With this the following calculation steps per equation can be estimated like in table \ref{tab:CalcSteps}.
@@ -70,7 +70,7 @@ This is resembles the halve of the maximum given by the requirements and does th
  The test have shown that the mean and the median of the height error are with 1.29 and 0.92 meter clearly under the aimed 2 meter.
  Despite of that there are peaks during the estimation where the error rises above the aimed 2 meter.
  Those result in error around 2 to 4 meter and can even sometimes rise to 6 to 7 meter.
- While this does not exactly match the requirement some improvement with sensors adjustment (faster accurater GPS and Pressure) should be possible.
+ While this does not exactly match the requirement some improvement with sensors adjustment (faster more accurate GPS and Pressure) should be possible.
  
  \subsection{Settling Time}
  There could no real settling time be defined in the tests because the error does rise above the aimed two meters during the flight with the peaks.
@@ -80,8 +80,8 @@ This is resembles the halve of the maximum given by the requirements and does th
  
  \subsection{Reliability}
  The found sensor fusion algorithm does exceed the reliability. 
- It does work quite well with one or two failed sensors and can also estimate the height properly if the ``right'' three sensor do fail.
- If the system loses all its height measurements the error does rise above 500 meters at the end and is therefore no more usefull.
+ It does work quite well with one or two failed sensors and can also estimate the height properly if the right three sensor do fail.
+ If the system loses all its height measurements the error does rise above 500 meters at the end and is therefore no more useful.
  But this remains into the given borders of the requirements
  
  \subsection{Modularity}
@@ -104,8 +104,8 @@ With those the algorithm itself could be validate and also adjusted, which shoul
 An quite interesting change could be to reduce the frequency of the control cycle.
 This would open the door for other state estimation algorithms which require more compute power.
 
-\subsubsection{Extended Kalman filter}
-For example a extended kalman filter could be implemented and with its help the non linear dependencies of the height from the pressure
+\subsubsection{Extended Kalmanfilter}
+For example a extended Kalmanfilter could be implemented and with its help the non linear dependencies of the height from the pressure
 could be described directly by the system model.
 In addition the force from the motor as well as the drag from the air breaks could with this be included as system inputs.
 Because they are also non linear and time depending (since the weight of the rocket does change over the flight).
@@ -114,7 +114,7 @@ Because they are also non linear and time depending (since the weight of the roc
 Also if there is more computing time for the sensor fusion the principal of including to late arrived measurements could be used.
 With this the GPS measurements could be used with more certainties.
 This would also come in handy if the algorithm is implemented in reality because
-it is possible that too late ariving measurements could be a common problem in the real implemented system.
+it is possible that too late arriving measurements could be a common problem in the real implemented system.
 
 \subsection{Temperature gradient}
 At least the temperature which was referenced during the whole thesis is a topic which could be more researched.
@@ -124,12 +124,12 @@ From there either the simulation and the algorithm itself could be optimised wit
 \section{Thanks}
 First of all credits have to be given to the whole ARIS team which supported this thesis with support
 and great parts of a already functioning simulation which could be used to generated the trajectories.
-Special thanks goes to Thomas Lew and Fabian  which provided there knowledge and the logging data from the test flights.
+Special thanks goes to Thomas Lew and Fabian Lyck which provided there knowledge and the logging data from the test flights.
 But also the EPFL team of the Matterhorn competition has to be thanked which saved this thesis by providing freely their logging data.
 
 \section{Reflection}
 The requirements could be met which of course is satisfying, but it has to be said that the test were made in a optimised simulation environment.
 If this algorithm will preform likewise in reality has yet to be tested.
-Personal this thesis was a frightening new experience due to attacking a whole new theoretical field (sensor fusion/ kalman filtering).
+Personal this thesis was a frightening new experience due to attacking a whole new theoretical field (sensor fusion/ Kalmanfilter).
 On the other hand because of this I have earned more theoretical knowledge in this thesis then in any other before.
 Also since the final product consist mainly of concepts and simulation the functionality of the final product was hard to proof.

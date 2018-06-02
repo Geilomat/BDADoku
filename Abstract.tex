@@ -1,5 +1,5 @@
-ARIS is a student assossiaction which compets every year in the SAC,
-in which the aim is to build a rocket which can fly autonomus to an apogee of 10 000 feet.
+ARIS is a student association which competes every year in the SAC,
+in which the aim is to build a rocket which can fly autonomous to an apogee of 10 000 feet.
 For this a control loop is implemented which needs a an as accurate information as possible of the current height.
 To achieve this different sensors are build into the rocket.
 The aim of this thesis is to find an algorithm and implement a simulation in which the data of the sensors can be fused to estimate the height as good as possible.
@@ -7,14 +7,14 @@ The aim of this thesis is to find an algorithm and implement a simulation in whi
 
 To achieve this first a validation concept was developed. 
 This concept uses a known trajectory to produce the perfect sensor data.
-Those perfect sensor data are then adjusted to realistic sensor data which resamble the data which the real sensor do produce.
+Those perfect sensor data are then adjusted to realistic sensor data which resemble the data which the real sensor do produce.
 For this the logging data from test flights is used to produce AR models which are used to generate the noise for the realistic data.
 After that this produced realistic sensor data is put into different versions of state estimator,
 The estimated heights from those state estimator are then compared to the trajectory which was used at the beginning.
 
 
-As the best fitting fusion algorithm a discrete kalman filter was found.
+As the best fitting fusion algorithm a discrete Kalmanfilter was found.
 It works with dynamic noise matrices to compensate for different sampling speeds of the sensors.
-The kalman filter itself does work with an rank 5 system which consists of height,speed,acceleration,acceleration offset and the pressure.
+The Kalmanfilter itself does work with an rank 5 system which consists of height,speed,acceleration,acceleration offset and the pressure.
 This solution provides a in perspective simple algorithm which is with the help of the simulation easy to adjust.
 This makes sure that the algorithm will work on a embedded system an can be used again in coming competition with appropriated effort.
