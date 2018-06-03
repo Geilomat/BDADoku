@@ -1,21 +1,20 @@
-The Academic Space Initiative Switzerland (ARIS) is a student association which competes every year in the ... ... ... (SAC),
-in which the aim is to build a rocket that can fly autonomously to an apogee of 10 000 feet (= 3048 meter).
+The Academic Space Initiative Switzerland (ARIS) is a student association which competes every year in the Spaceport America Cup (SAC),
+in which the aim is to build a rocket that can fly autonomously to an exact apogee of 10 000 feet (= 3048 meter).
 To fly to this height a control loop has to be implemented which needs as accurate information as possible of the current height.
 To achieve this a set of different sensors are built into the rocket.
-The aim of this thesis is to find an algorithm and implement a simulation in which the data of the sensors can be fused to estimate the height as good as possible and prove the suitability of the algorithm.
+The aim of this thesis is to find an algorithm and implement a simulation in which the data of the sensors can be fused to estimate the height as good as possible and prove the suitability of the algorithm with the simulation.
 
 
 The first step to achieve this was to develop a validation concept.
-This concept uses a known trajectory to produce a perfect sensor dataset simulation.
-This perfect sensor dataset is then adjusted to provide a more realistic sensor dataset.
-For this the logging data from test flights is used to produce AR models which are then used to generate realistic noise to be merged with the perfect sensor dataset.
-After that this produced realistic sensor dataset is put into different versions of a state estimator.
-These different versions of the state estimator represent different algroithms that try to reproduce the current height as accurate as possible out of the provided sensor data.
-The estimated heights from those state estimators have then been compared to the trajectory which has been used in the beginning.
+The developed concept uses a known trajectory to produce a perfect sensor dataset simulation.
+This perfect sensor dataset is then augmented with noise to a more realistic sensor dataset.
+For this the logging data from test flights has been used to produce AR models which are then used to generate realistic noise to be merged with the perfect sensor dataset.
+After that this produced realistic sensor dataset has been fet into different versions of a state estimator which represent different algorithms that try to reproduce the current height of the rocket as accurately as possible.
+The estimated heights from those state estimators have then been compared to the trajectory that was used in the beginning.
 
 
 As the best fitting fusion algorithm a discrete Kalman filter was found.
 It works with dynamic noise matrices to compensate for different sampling speeds of the sensors.
-The Kalman filter itself does work with an rank 5 system which consists of height, speed, acceleration, acceleration offset, and the air pressure.
+The Kalman filter itself does work with an rank 5 system which consists of the height, speed, acceleration, acceleration offset, and the air pressure.
 This solution provides an in perspective simple algorithm which with the help of the simulation is easy to adjust.
-That simulation makes sure that the algorithm will work on an embedded system and can be used again in coming competitions with reasonable effort.
+That simulation showed that this algorithm will work on an embedded system and helps, that it can be used again in coming competitions with reasonable effort.

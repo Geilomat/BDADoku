@@ -1,48 +1,49 @@
-After the test were made to find the best solution for the state estimation
-the found solution will be compared to the requirements.
-After that follows a outlook for further development and brief reflection on this project itself.
+After the test have been made to find the best performing solution for the state estimation,
+the found solution will now be compared to the requirements.
+After that follows an outlook for further development and a brief reflection on this project itself.
 
 \section{Derived Solution}
-The solution for the stated problem which was found over this thesis can be summarised as follows.
+The solution for the stated problem which was found during this thesis can be summarised as follows.
 \begin{itemize}
- \item The algorithm uses a discrete Kalmanfilter which has dynamic noise matrices for the measurements as well as the system.
- \item In the measurements noise matrices are the noises for the GPS and the Pressure set to infinity while no measurements from the GPS module or the Barometers are available.
-The same concept is used if it is detected that a sensor is not working properly.
- \item The state vector which describes the estimated system consist of the height, speed, acceleration, acceleration offset and the pressure.
- \item To work in the optimal possible test flights with the used sensors have to be made and the noise matrices have to be calculated out of the measured data.
+ \item The algorithm uses a discrete Kalman filter which has dynamic noise matrices for the measurements as well as the system.
+ \item The state vector which describes the estimated system consists of the height, the speed, the acceleration, the acceleration offset and the pressure.
+ \item The measurement noise matrices contain the noises for the GPS and the pressure set to infinity if no measurements from the GPS module or the Barometers are available.
+The same concept is used if it is detected that another sensor is not working properly.
+ \item To work in the best possible way additional test flights with the really used sensors have to be made and the noise matrices have to be calculated out of that measured data.
 \end{itemize}
 
-This provides an optimal trade off between robustness and accuracy and a small computational effort as possible.
+This solution provides an optimal trade off between robustness and accuracy and an as small computational effort as possible.
 
 \section{Comparison Solution/Requirements}
-To how good the given requirements are met can be described by filling out the requirements table from the chapter \ref{ch:Introduction}.
-This can be seen in the table \ref{tab:RequirementsFilledOut}.
+How good the given requirements are met can be described by filling out the requirements table from the chapter \ref{ch:Introduction}.
+The outcome can be seen in Table \ref{tab:RequirementsFilledOut}.
 
  \begin{table}[h]
  \centering
- \begin{tabular}{|l|l|l|l|}	
- \hline	
+ \begin{tabular}{|l|l|l|l|}
+ \hline
  \bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Result} \\ \hline
  System Load   & \# Calculation steps per loop & < 5000 & $\approx$2500 \\ \hline
  Precision     & Error between estimation and ground truth  & < 2m in Z & Median$\approx$ 0.92 m  \\ \hline
- Settling Time & Time from first reliable to optimal estimation  & < 1 s &  0.8 s \\ \hline
- Reliability   & Functioning Estimation with \#failed sensors & 2-3 sensors & 3 sensors \\ \hline	
- Modularity    & Effort needed to change a sensors & < 10 h work &  5-10 hours \\ \hline
- \end{tabular}	
+ Settling Time & Time from first reliable to optimal estimation  & < 1 s &  0.8 s\\ \hline
+ Reliability   & Working Estimation with \# failed sensors & 2-3 sensors & 3 sensors \\ \hline
+ Modularity    & Effort needed to change a sensor & < 10 h work &  5-10 hours \\ \hline
+ \end{tabular}
  \caption{Requirements table filled out}
  \label{tab:RequirementsFilledOut}
  \end{table}
- 
+
+
  \subsection{System Load}
- The system load is calculated by finding the simple calculation (addition, subtraction, multiplication and division) which are needed for each equation of the state estimator to resolve.
- Since the used system model consist out of five state variables and there are 5 measurements at the input (GPS, Accelerometer, Barometer 1, Barometer 2 and height out of Pressure) most matrices used are a 5x5 matrix.
- Therefore there multiplication with each other need 225 calculation steps (4 additions and 5 multiplication for each of the 25 values in the resulting matrix).
- Also the matrix inversion with the Gauss-Jordan elimination has a complexity of $2^3$ which result in about 125 calculation for a 5x5 matrix.
- In addition two equations which do not come from the Kalmanfilter equations itself have to be calculated.
- These are the inclusion of the pitch angle on the acceleration measurements to get the pure vertical acceleration and 
- the calculation of the height out of the state vector which contains the actual pressure to include them into the state estimation.
- With this the following calculation steps per equation can be estimated like in table \ref{tab:CalcSteps}.
- 
+ The system load is calculated by finding the simple calculations (addition, subtraction, multiplication and division) which are needed for each equation of the state estimator to solve.
+ Since the used system model consist out of five state variables and there are 5 measurements at the input (GPS, Accelerometer, Barometer 1, Barometer 2 and height out of pressure) most matrices used are 5x5 matrices.
+ Therefore the multiplication with each other needs 225 calculation steps (4 additions and 5 multiplications for each of the 25 values in the resulting matrix).
+ Also the matrix inversion with the Gauss-Jordan elimination has a complexity of $2^3$ which results in about 125 calculations for a 5x5 matrix.
+ In addition two equations which do not come from the Kalman filter equations itself have to be calculated.
+ These are the inclusion of the pitch angle on the acceleration measurements to get the pure vertical acceleration and
+ the calculation of the height out of the state vector which contains the actual pressure.
+ With this the following calculation steps per equation can be estimated as shown in Table \ref{tab:CalcSteps}.
+
  \begin{table}[h!]
   \centering
   \begin{tabular}{ccc}
@@ -57,79 +58,77 @@ This can be seen in the table \ref{tab:RequirementsFilledOut}.
   $P[k] = (I - K \cdot C)\cdot P[k]) $				& 25+225+225		& 475 \\
   Total calculation steps					& 45+775+4+8+1050+100+475& 2457
   \end{tabular}
-  \caption{Calculation steps per estimation cycles}
+  \caption{Calculation steps per estimation cycle}
   \label{tab:CalcSteps}
 \end{table}
 
 
-The table shows that a rough estimation of the needed calculation steps is around 2500 calculation per cycle.
-This is resembles the halve of the maximum given by the requirements and does therefore fit the requirement.
- 
- 
+The table shows that a rough estimation of the needed calculation steps is around 2500 calculations per cycle.
+This is half of the maximum given by the requirements and does therefore fit the requirement.
+
+
  \subsection{Precision}
- The test have shown that the mean and the median of the height error are with 1.29 and 0.92 meter clearly under the aimed 2 meter.
- Despite of that there are peaks during the estimation where the error rises above the aimed 2 meter.
- Those result in error around 2 to 4 meter and can even sometimes rise to 6 to 7 meter.
- While this does not exactly match the requirement some improvement with sensors adjustment (faster more accurate GPS and Pressure) should be possible.
- 
+ The tests have shown that the mean and the median of the height error are with 1.29 and 0.92 meters clearly under the aimed 2 meters.
+ Despite of that there are peaks during the estimation where the error rises above the aimed 2 meters.
+ This results in errors around 2 to 4 meters and can sometimes even rise to 6 or 7 meters.
+ While this does not exactly match the requirement at a deeper sight, some improvement with sensors adjustment (faster and more accurate GPS and pressure sensors) should be possible.
+
  \subsection{Settling Time}
- There could no real settling time be defined in the tests because the error does rise above the aimed two meters during the flight with the peaks.
- But if the settling time is used in terms of the time until the optimal possible estimation,
- it can be seen in the plot from the figure \ref{fig:BestSystemPerformance} that this is around 0.8 seconds after the ignition.
- After this moment the estimation for the acceleration and speed are settled in which means the height estimation should be at its best possible estimation.
- 
+ No real settling time could have been defined in the tests because the error peaks rise above the aimed two meters during the whole flight.
+ But if the settling time is used in terms of the time until the optimal possible estimation is working properly,
+ it can be seen in the plot from Figure \ref{fig:BestSystemPerformance} that this is around 0.8 seconds after the ignition.
+ After this moment the estimation for the acceleration and speed are settled which means the height estimation should be at its best possible estimation.
+
  \subsection{Reliability}
- The found sensor fusion algorithm does exceed the reliability. 
- It does work quite well with one or two failed sensors and can also estimate the height properly if the right three sensor do fail.
+ The found sensor fusion algorithm does exceed the reliability.
+ It does work quite well with one or two failed sensors and can also estimate the height properly if the ``right'' three sensor do fail.
  If the system loses all its height measurements the error does rise above 500 meters at the end and is therefore no more useful.
- But this remains into the given borders of the requirements
- 
+ But by having three height measurements this still remains inside the given borders of the requirement.
+
  \subsection{Modularity}
- The modularity is problematic to evaluate in clear values.
- With the derived simulation it should be possible do adjust the algorithm for a new sensor quite fast (5 to 10 hours of work), 
- given that the simulation is known and enough tests with the new sensors are made an logged.
- With this the data could be used to derive the needed sensor model and the corresponding noise matrices are calculated automatically during the simulation.
- 
+ The modularity is difficult to evaluate in clear values.
+ With the derived simulation it should be possible to adjust the algorithm for a new sensor quite fast (5 to 10 hours of work),
+ given that the simulation is known and enough tests with the new sensors have been made and logged.
+ This test data can then be used to derive the needed sensor model and the corresponding noise matrices will be calculated automatically during the simulation.
+
 
 \section{Outlook}
-As always there are points which could be developed further for better results which are stated here.
+As always there are points which still can be developed further for better results. These are stated here.
 
-\subsection{More better documented test flights}
-First of all more and better documented test flight with the used sensors should be made.
+\subsection{More and better documented test flights}
+First of all more and better documented test flights with the used sensors should be made.
 These would result in better sensor models and could therefore increase the accuracy of the derived noise matrices.
 Also the found algorithm should be ported into an embedded system and then be tested in those flights.
-With those the algorithm itself could be validate and also adjusted, which should result in a over all more reliable state estimation
+With this the algorithm itself can be validated and also adjusted, which should result in an overall more reliable state estimation.
 
 \subsection{Slower cycle time}
-An quite interesting change could be to reduce the frequency of the control cycle.
-This would open the door for other state estimation algorithms which require more compute power.
+A quite interesting change could be to reduce the frequency of the control cycle.
+This would open the door for other state estimation algorithms which require more computational power but also provide more accurate estimations.
 
-\subsubsection{Extended Kalmanfilter}
-For example a extended Kalmanfilter could be implemented and with its help the non linear dependencies of the height from the pressure
-could be described directly by the system model.
-In addition the force from the motor as well as the drag from the air breaks could with this be included as system inputs.
-Because they are also non linear and time depending (since the weight of the rocket does change over the flight).
+\subsubsection{Extended Kalman filter}
+For example an extended Kalman filter could be implemented and with its help the non-linear dependencies of the height from the pressure
+could be described directly inside the system model.
+In addition the force from the motor as well as the drag from the air breaks could be included into the system as system inputs, because they are also non-linear and time depending (since the weight of the rocket does change over the flight).
 
 \subsubsection{Back calculation for measurements that arrive out of time}
-Also if there is more computing time for the sensor fusion the principal of including to late arrived measurements could be used.
-With this the GPS measurements could be used with more certainties.
-This would also come in handy if the algorithm is implemented in reality because
-it is possible that too late arriving measurements could be a common problem in the real implemented system.
+Also if there is more computing time for the sensor fusion the principle of including too late arrived measurements could be used.
+With this the GPS measurements could even more positively affect the whole estimation.
+This would also come in handy when the algorithm is implemented on a real system because
+it is possible that too late arriving measurements are a common problem in the real system.
 
 \subsection{Temperature gradient}
-At least the temperature which was referenced during the whole thesis is a topic which could be more researched.
-This would lead in better understanding in the interaction between pressure and height.
-From there either the simulation and the algorithm itself could be optimised with this knowledge.
+Last but not least the temperature gradient which was referenced during the whole thesis is a topic which can be more thoroughly researched.
+This would lead in a better understanding in the interaction between the pressure and the height.
+From there either the simulation and/or the algorithm itself could be optimised with this knowledge.
 
 \section{Thanks}
-First of all credits have to be given to the whole ARIS team which supported this thesis with support
-and great parts of a already functioning simulation which could be used to generated the trajectories.
-Special thanks goes to Thomas Lew and Fabian Lyck which provided there knowledge and the logging data from the test flights.
-But also the EPFL team of the Matterhorn competition has to be thanked which saved this thesis by providing freely their logging data.
+First of all credits have to be given to the whole ARIS team which supported this thesis with help and advice and great parts of an already working simulation which could be used to generate the trajectories.
+Special thanks goes to Thomas Lew and Fabian Lyck which provided their knowledge and the logging data from the test flights.
+But also the EPFL team of the Matterhorn competition has to be thanked which saved the success of this thesis by providing freely their logging data.
 
 \section{Reflection}
-The requirements could be met which of course is satisfying, but it has to be said that the test were made in a optimised simulation environment.
-If this algorithm will preform likewise in reality has yet to be tested.
-Personal this thesis was a frightening new experience due to attacking a whole new theoretical field (sensor fusion/ Kalmanfilter).
-On the other hand because of this I have earned more theoretical knowledge in this thesis then in any other before.
-Also since the final product consist mainly of concepts and simulation the functionality of the final product was hard to proof.
+First of all, all the requirements could be met which of course is satisfying. But it has to be said that the tests were made in an optimised simulation environment and if this algorithm will preform likewise in reality has yet to be tested.
+Also since the final product consist mainly of concepts and simulation the functionality and suitability for the target system was hard to proof.
+
+Personally this thesis was a frightening new experience in the beginning because it covered a whole new theoretical field for me (sensor fusion/ Kalman filter).
+On the other hand because of this I have earned more theoretical knowledge during this thesis than in any other before.
