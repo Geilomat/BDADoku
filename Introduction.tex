@@ -8,7 +8,8 @@
  \label{fig:ArisLogo}
 \end{figure}
 
- The Academic Space Initiative Switzerland (ARIS) is a student association which competes in the yearly Intercollegiate Rocket Engineering Competition (IREC).
+ The Academic Space Initiative Switzerland (ARIS) is a student association which takes part in the yearly Spaceport America Cup (SAC).
+ In detail they compete in the Intercollegiate Rocket Engineering Competition (IREC).
  The goal of this competition is to build a rocket that can fly autonomously to a predefined apogee (10 000 feets = 3048 meters) and after that return safely back to the ground with the help of parachutes.
  Additionaly the rocket has to be able to transport a specific amount of payload with it.
  There are a total of 1 000 points to achieve in the competition which are based on different parts depicted in Table \ref{tab:CompetitionCalculation}.
@@ -95,6 +96,7 @@ Flight performance & 500 & 50 \% \\ \hline
  This used sensors and their settings will be described in this chapter.
 
  % Insert more information about those sensors if I get to them...
+ \newpage
  \subsection{Accelerometer}
  First of all comes the accelerometer. Accelerometers are well established and widely used sensors which measure the force which is applied onto the sensor in the three space dimensions.
  This year's accelerometer is an ADXL357 which will be sampled at 1 000 Hz.
@@ -122,6 +124,7 @@ Flight performance & 500 & 50 \% \\ \hline
  This measurements are more precise as the rest of the sensors but are taken at a much slower sample rate around 0.5 - 2Hz.
  Therefore the algorithm should already take these measurements into account too and interpolate them with the data from the other sensors.
 
+ \newpage
  \section{Problems}
  Out of the research and the previous competitions, different problems appeared that need to be addressed in this thesis to ensure an as good as possible solution.
 
@@ -136,7 +139,8 @@ Flight performance & 500 & 50 \% \\ \hline
  The system this year is a 32 bit ARM SoC which runs at 168 MHz. Assumed that the whole control software has at maximum half of a software cycle at his disposal the maximum clock cycles to be used for all calculations in one such software cycle is around 84 000.
  With this amount of cycles the processor can do around 10 000 simple calculations (addition, subtraction, multiplication or division),
  because its floating point unit needs on average around 8.5 cycles per operation (load, calculate and store). Of these 10 000 simple calculations at most 5 000 may be used by the sensor fusion algorithm.
- This number is just a rough assumption, which means that the final system load should aim to not reach this value or at least not exceed it by a great number.
+ This number is just a rough assumption with the use of optimal performances
+ Which means that the final system load should aim to not reach this value by an as great amount as possible or at least not exceed it.
 
  \subsection{Precision}
  The precision is after the system load the most critical attribute. If the algorithm fails to provide the required accuracy the control algorithm has no exact height estimation to rely on.
@@ -157,9 +161,10 @@ Flight performance & 500 & 50 \% \\ \hline
  Therefore the presented algorithm should provide the possibility to adapt to new sensors in an easy way, as long as they resemble the old sensor in a feasible way.
  This will ensure a long term usability of the provided algorithm.
 
+ \newpage
  \section{Requirements}
 
- \begin{table}[h]
+ \begin{table}[h!]
  \centering
  \begin{tabular}{|l|l|l|l|}
  \hline

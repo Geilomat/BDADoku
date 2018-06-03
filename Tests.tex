@@ -91,7 +91,6 @@ This shows that the error which the estimator makes does rise exponentially.
 So this is an issue which should be assessed by including an acceleration offset in the state vector.
 
 
-\newpage
 \section{Point Mass with Acceleration Offset}
 The overall performance of this system model can be seen in the figure \ref{fig:PointMassOffsetPerformance}.
 
@@ -144,7 +143,6 @@ It can clearly be seen that while the mean error does rise by some value, it alw
  \label{fig:PointMassOffsetErrorWithOffset}
 \end{figure}
 
-
 \newpage
 \section{Point Mass with Pressure}
 As with the ones above the overall performance of the system model which uses the pressure as an additional state variable can be seen in Figure \ref{fig:PointMassPressurePerformance}.
@@ -180,6 +178,7 @@ Like above Table \ref{tab:ErrorPointMassPressure} shows the error over the simul
 The error on the height is nearly as good as with the acceleration offset, while the maxima of the differences are quite smaller than above.
 These results therefore have much better mean values of the errors.
 
+\newpage
 \subsection{Wrong Temperature Gradient}
 While it does increase the accuracy it does also increase the needed computational effort due to the fact that to get a real added value from this,
 the height out of the pressure has to be calculated at each time step with the help of the estimated pressure.
@@ -204,9 +203,8 @@ On the other hand if the error on the temperature gradient is exactly known, the
 results in a gain of robustness for the whole estimation.
 
 To summarize it, the pressure as a state variable is a risky but if done right a helpful adjustment of the system model.
-
 \newpage
-\section{Point Mass with Pitch angle}
+\section{Point Mass with Pitch Angle}
 The pitch angle is difficult to estimate because it has no measured dependencies on its own.
 Therefore the Kalman filter does just something like a real time low pass filtering on those measurements.
 This can be seen in Figure \ref{fig:PointMassPitchAnglePerformance}. The estimated pitch angle there changes slower than the generated measurements value which can be seen in chapter \ref{ch:Implementation}.
@@ -240,6 +238,7 @@ Angle	                  	  & $°$   			& 12.26                   & 2.46e-05     
 In Table \ref{tab:ErrorPointMassPitchAngle} the errors of the estimation can be seen once again.
 It shows that the values are nearly the same as the ones from the point mass system.
 
+\newpage
 \subsection{Small Influence}
 This results in the conclusion that the influence of the pitch angle is much smaller than thought.
 This mainly because the pitch angle does only start to get to a greater value after the burnout.
@@ -258,7 +257,7 @@ This can be seen in the plot on Figure \ref{fig:PointMassVSPitch} where the esti
 \end{figure}
 
 \newpage
-\section{Point Mass with Acceleration as input}
+\section{Point Mass with Acceleration as Input}
 The overall performance of this system model is shown in Figure \ref{fig:PointMassAccInputPerformance}.
 
 \begin{figure}[h!]
@@ -296,7 +295,7 @@ Acceleration                       & $m/s^2$   			& 10.65                  & 0  
 \end{table}
 
 \newpage
-\section{Point Mass with offset and better calculated system noise}
+\section{Point Mass with Offset and Better Calculated System Noise}
 The better calculated system noise for this estimation was calculated as stated in chapter \ref{ch:Implementation}.
 This has been done by calculating the discrete system noise matrix Gd with the integration method as well as
 derive the perfect measurements and then low pass filter them to get better system noise vectors.
@@ -347,8 +346,7 @@ Also the additional effort to access this system model only occurs on the prepar
 while it does have no effect on the computational effort during the flight itself.
 So this approach of the state estimation should be used any time if available.
 
-\newpage
-\section{With and without GPS}
+\section{With and Without GPS}
 It is not certain that the GPS will be working in the next competitions as already stated in the introduction.
 In addition the GPS sensor data needs more time to be measured and can therefore arrive too late to be included correctly.
 There is the possibility of back calculation to include such too late arrived measurements into the state estimation but this needs a lot of computational effort \cite{SimonDan2006Ose:}.
@@ -385,7 +383,8 @@ Acceleration                       & $m/s^2$   			& 17.78                  & 7.6
 Table \ref{tab:ErrorPointMassWithoutGPS} which displays the errors from the estimations shows that as expected the error is bigger in each value.
 Also the maximum height error of over 30 meter shows that the normal state estimator is really depending on the GPS measurements.
 
-\subsection{Wrong temperature gradient}
+\newpage
+\subsection{Wrong Temperature Gradient}
 This system has to depend strongly on the barometer measurements to calculate the height.
 Therefore the problem of a wrong temperature gradient arises once again.
 To show this the estimation results with different temperature gradients are plotted in Figure \ref{fig:PointMassWithWithoutGPS}.
@@ -403,14 +402,14 @@ therefore the height out of the pressure measurements is calculated wrong the er
 With this the error increases with the ascending rocket if it is not corrected by the GPS measurements.
 So the aim of the best performance system has to be that it should not depend too much on those GPS measurements for a good state estimation.
 
-\newpage
 \section{Best Performing System}
 Based on the results from the tests above the best performing system can be defined.
 The main goal is to achieve an as robust state estimation as possible that does also match the given accuracy requirements.
-The pitch angle did not have a useful positive effect on the estimation and is therefore not implemented.
+The pitch angle did not have a useful positive effect on the estimation and would increase the computational effort due an additional rank, because of this it is not implemented.
 Also the acceleration as input does not significantly improve the estimation.
 Therefore the best system for the stated problem consist of the additional acceleration offset as a state vector as well as better calculated system noise.
 Despite the fact that the pressure is risky to implement as a state variable it is used in this implementation because it does increase the robustness significantly.
+This does therefore result in a rank 5 system which should fit the given calculation steps requirement at first glance, but it will also be analyzed in detail in the next chapter.
 
 \begin{figure}[h!]
  \centering
@@ -467,7 +466,7 @@ For comparison there is also the point mass system model estimation with and wit
 This shows that the best found system model can estimate the height as good as the point mass system without the GPS measurements.
 On the other hand the point mass system model without the GPS measurements does loose accuracy as the rocket rises higher above ground.
 
-\subsubsection{Wrong temperature gradient}
+\subsubsection{Wrong Temperature Gradient}
 This system model should also have some robustness against a falsely defined temperature gradient.
 It has to be said that in the simulation the difference of the real and the used temperature gradient is known and the noises are adjusted properly.
 This will maybe not be the case in the real flight.
@@ -514,20 +513,19 @@ These values show that the estimation is just slightly better than without any G
 The barometer is special because if all barometers are lost,
 the height which is calculated out of the state vector pressure has to be completely max'ed out.
 
-\subsubsection{One Barometer fails}
+\subsubsection{One Barometer Fails}
 The loss of one barometer does already make a significant change into the estimation.
 For example the mean of the height error rises to 1.78 meter while the median also rises to 1.39 meter.
 The difference between the mean and the median shows that there occur more outliers if just one barometer is active.
 This can also be seen in the error of the barometer estimation which rises to 0.2 hP for the mean and 0.16 hP for the median.
 
-\subsubsection{All Barometer fail}
+\subsubsection{All Barometer Fail}
 More interesting is how the state estimator is performing when no barometer measurements are available at all.
 As expected the error of the barometer estimation rises to high values which are around 12 hP for the mean and 11 hP for the median.
 But on the other hand the accuracy of the height estimation does actually rise to more or less the same values as with two working barometers.
 This behaviour can be explained with the still working GPS.
 If both barometers fall out and therefore there is no height calculated out of the pressure, the height from the
 GPS sensor gets a higher weight due to it being the only remaining measurements on the height.
-
 \newpage
 \subsection{Accelerometer Outfall}
 The influence of an outfall of the accelerometer can be well shown in the plots of Figure \ref{fig:PerformanceAccOutfall}.

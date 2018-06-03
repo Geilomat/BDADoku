@@ -95,28 +95,28 @@ This is half of the maximum given by the requirements and does therefore fit the
 \section{Outlook}
 As always there are points which still can be developed further for better results. These are stated here.
 
-\subsection{More and better documented test flights}
+\subsection{More and Better Documented Test Flights}
 First of all more and better documented test flights with the used sensors should be made.
 These would result in better sensor models and could therefore increase the accuracy of the derived noise matrices.
 Also the found algorithm should be ported into an embedded system and then be tested in those flights.
 With this the algorithm itself can be validated and also adjusted, which should result in an overall more reliable state estimation.
 
-\subsection{Slower cycle time}
+\subsection{Slower Cycle Time}
 A quite interesting change could be to reduce the frequency of the control cycle.
 This would open the door for other state estimation algorithms which require more computational power but also provide more accurate estimations.
 
-\subsubsection{Extended Kalman filter}
+\subsubsection{Extended Kalman Filter}
 For example an extended Kalman filter could be implemented and with its help the non-linear dependencies of the height from the pressure
 could be described directly inside the system model.
 In addition the force from the motor as well as the drag from the air breaks could be included into the system as system inputs, because they are also non-linear and time depending (since the weight of the rocket does change over the flight).
 
-\subsubsection{Back calculation for measurements that arrive out of time}
+\subsubsection{Back Calculation for Measurements That Arrive Out of Time}
 Also if there is more computing time for the sensor fusion the principle of including too late arrived measurements could be used.
 With this the GPS measurements could even more positively affect the whole estimation.
 This would also come in handy when the algorithm is implemented on a real system because
 it is possible that too late arriving measurements are a common problem in the real system.
 
-\subsection{Temperature gradient}
+\subsection{Temperature Gradient}
 Last but not least the temperature gradient which was referenced during the whole thesis is a topic which can be more thoroughly researched.
 This would lead in a better understanding in the interaction between the pressure and the height.
 From there either the simulation and/or the algorithm itself could be optimised with this knowledge.
@@ -127,8 +127,12 @@ Special thanks goes to Thomas Lew and Fabian Lyck which provided their knowledge
 But also the EPFL team of the Matterhorn competition has to be thanked which saved the success of this thesis by providing freely their logging data.
 
 \section{Reflection}
-First of all, all the requirements could be met which of course is satisfying. But it has to be said that the tests were made in an optimised simulation environment and if this algorithm will preform likewise in reality has yet to be tested.
+First of all, all the requirements could be met which of course is satisfying. 
+But it has to be said that the tests were made in an optimised simulation environment and if this algorithm will preform likewise in reality has yet to be tested.
 Also since the final product consist mainly of concepts and simulation the functionality and suitability for the target system was hard to proof.
+This circumstance was even increased in the first weeks by the lack of usable sensor from test flights,
+which was fortunately solved by the EPFL team which provided their log data.
 
 Personally this thesis was a frightening new experience in the beginning because it covered a whole new theoretical field for me (sensor fusion/ Kalman filter).
+Also the range of this thesis was scattered wide by the multiple concepts form different electric engineering fields that had to been developed and used.
 On the other hand because of this I have earned more theoretical knowledge during this thesis than in any other before.
