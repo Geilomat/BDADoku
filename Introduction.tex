@@ -1,6 +1,6 @@
 
  \section{Task}
- 
+
  \begin{figure}[h!]
  \centering
  \includegraphics[width=0.3\textwidth]{./Pictures/ARIS_logo.png}
@@ -9,34 +9,34 @@
 \end{figure}
 
  The Academic Space Initiative Switzerland (ARIS) is a student association which competes in the yearly Intercollegiate Rocket Engineering Competition (IREC).
- The goal of this competition is to build a rocket which can fly autonomous at a predefined apogee (10000 feet = 3048 meter) and after that return safe to the ground with the help of parachutes.
- Also the rocket has to be able too transport a specific amount of payload with it.
- There are a total of 1000 points to achieve in the competition which are split into different parts.
- 
+ The goal of this competition is to build a rocket that can fly autonomously to a predefined apogee (10 000 feets = 3048 meters) and after that return safely back to the ground with the help of parachutes.
+ Additionaly the rocket has to be able to transport a specific amount of payload with it.
+ There are a total of 1 000 points to achieve in the competition which are based on different parts depicted in Table \ref{tab:CompetitionCalculation}.
+
 \begin{table}[h]
 \centering
 \begin{tabular}{|l|l|l|}\hline
 {\bf Description} & {\bf Points} & {\bf Percent}\\\hline
-Entry form an progress update & 60 & 6 \% \\ \hline
+Entry form and progress update & 60 & 6 \% \\ \hline
 Technical report & 200 & 20 \% \\ \hline
 Design implementation & 240 & 24 \% \\ \hline
 Flight performance & 500 & 50 \% \\ \hline
-Total & 1000 & 100 \% \\ \hline 
+{\bf Total} & {\bf 1000} & {\bf 100} \% \\ \hline
 \end{tabular}
 \caption{Calculation of the points of the IREC}
 \label{tab:CompetitionCalculation}
-\end{table}  
+\end{table}
 
- Table \ref{tab:CompetitionCalculation} shows how those points are divided in detail. 
- It can be seen that just the halve of the points are assigned for the performance at the competition itself.
- The other halve of the points can be achieved by teamwork, professional documentation and engineering during the developing and construction of the rocket.
- For the 500 points which are assigned for the flight performance, 350 are assigned for the error made between the targeted and approached apogee.
+
+ It can be seen that just halve of the points are assigned to the performance at the competition itself.
+ The other halve of the points can be achieved by teamwork, professional documentation and good engineering during the development and construction of the rocket.
+ For the 500 points which are assigned to the flight performance, 350 are based on the error made between the targeted and approached apogee.
  These points are calculated like this:
- 
- $$ Points =  350 - \frac{350}{0.3\cdot TargetApogee} \cdot |TargetApogee - ActualApogee|$$
- 
- So there is a total of one point loss per 2.6 meter error \cite{SpaceportAmericaCup2018}. \\
- 
+
+ $$ Points =  350 - \frac{350}{0.3\cdot TargetedApogee} \cdot |TargetedApogee - ApproachedApogee|$$
+
+ So there is a total of one point loss per 2.6 meters of deviation from the targeted apogee \cite{SpaceportAmericaCup2018}. \\
+
  \begin{figure}[h]
  \centering
  \includegraphics[width=.8\textwidth]{./Pictures/RocketModel.jpg}
@@ -44,45 +44,44 @@ Total & 1000 & 100 \% \\ \hline
  \caption{Concept of the 2018 competition rocket Tell}
  \label{fig:2018RocketModel}
 \end{figure}
- Figure \ref{fig:2018RocketModel} shows the rocket Tell which will be used in this years competition.
- To aim for the right apogee a Control algorithm is implemented in the micro controller which is placed in the lower body.
- This control algorithm predicts the apogee which would be achieved depending on the actual states of the rocket (height. speed. acceleration).
- It then drives the air breaks to adjust that predicted apogee to the aimed 10000 feet.
- This algorithm relays on the information of different sensors to determine the rockets actual state.
- Because there are different sensors to measure the same states in the end, a algorithm which fuses those data would come in handy.
+ Figure \ref{fig:2018RocketModel} shows the rocket ``Tell'' which will be used in this year's competition.
+ To aim for the right apogee a control algorithm is implemented on a micro controller that is placed in the lower body of the rocket.
+ This control algorithm predicts the to-be-achieved apogee depending on the current states of the rocket (height, speed and acceleration).
+ It then drives the air breaks to adjust that predicted apogee to the aimed 10 000 feet.
+ This algorithm relays on the information of different sensors to determine the actual state of the rocket.
+ Because there are different sensors to measure basically the same states, an algorithm which fuses this data to only one state information set would come in handy.
  With this fusion algorithm it should also be possible to be more accurate as with each sensor on its own.
- So the aim of this thesis is to implement a simulation and with its help find the algorithm which is most suitable for this task.\\
- For this the current situation of this years project, the problem as well as the desired solution will be defined in this chapter.
- After that the models for the different sensor that will be used as well as the pro and con of different state estimators are discussed at beginning of chapter \ref{ch:Approach}.
- In addition, different possible system models are also described in this chapter.
- Chapter \ref{ch:Implementation} will then show, how the simulation and the fusion algorithm are implemented in detail.
- Also it will discuss how the concepts which were developed in the chapter before are integrated in the simulation. 
- To verify that the implementation is working as intended, the results of the simulation especially the performance of the different system models are discussed in chapter \ref{ch:Tests}.
- In the last chapter \ref{ch:Conclusion} a summary of the achieved knowledge,  a comparison between the desired and the implemented solution and an outlook for coming work on this topic will be stated.
+ So the aim of this thesis is to implement a simulation for the sensor data provided during flight and with this simulation's help find the algorithm which is best suited for this task.\\
+ For this the current situation of this year's project, the problem to be solved during this work and the desired solution will be described in this chapter.
+ After that the models for the different sensors that will be used as well as the pros and cons of the different possible state estimators are discussed at the beginning of chapter \ref{ch:Approach}.
+ In addition, different possible system models are also described in that chapter.
+ Chapter \ref{ch:Implementation} will then show how the simulation and the fusion algorithm are implemented in detail.
+ Furthermore will it discuss how the concepts that have been developed in the chapter before are integrated into the simulation.
+ To verify that the implementation is working as intended, the results of the simulation and especially the performance of the different system models are discussed in chapter \ref{ch:Tests}.
+ Finally, in the last chapter \ref{ch:Conclusion} a summary of the achieved knowledge, a comparison between the desired and the implemented solution and an outlook for coming work on this topic will be given.
  \newpage
- 
+
 
  \section{Purpose}
- The hardware as well as the most of the software parts that will be used for this competition are already defined.
- Also it is a suitable assumption that the sensors and the dynamics of the rocket will stay more or less the same for the competitions coming.
- Therefore this thesis will mainly focus on finding a algorithm for this given surroundings, but it is also will try to find as modular solution as possible, 
- so that achieved knowledge can be used in further competition. 
- This knowledge will then be used to for better performance at the competition flight itself as well as to optimise the points achieved in the implementation part.
- For this the dependencies of an possibilities of the different sensor should be developed so that they can be fused in an optimal way.
- The final product should be an suitable fusion algorithm as well as a simulation which provides the tools needed to test and adjust this algorithm.
-  
+ The hardware as well as the most of the software parts that will be used for this competition have already been defined.
+ In addition it is a suitable assumption that the sensors and the dynamics of the rocket will stay more or less the same for the competitions coming.
+ Therefore this thesis will focus mainly on finding an algorithm for this given surroundings, raise the performance at the competition flight itself and with this optimise the points achieved in the design implementation part.
+ On top of that this thesis will also try to find an as modular solution as possible, so that the achieved knowledge can be reused and refined in further competitions.
+ For this the dependencies and possibilities of the different sensors should be developed such that they can be fused in an optimal way.
+ The final product should consist of a suitable fusion algorithm as well as a simulation part which provides the tools needed to test and adjust this fusion algorithm.
+
  \section{Research}
- Sensor/data fusion and state estimation is a well established engineering field.
- Especially since the 1960 when Rudolf A Kalman published his paper for the Kalman filter.
- Those fusion algorithms are espacially established in rocket science since they were first developed for the tracking of flying object.
+ Sensor data fusion and state estimation is a well established engineering field.
+ Especially since the 1960 when Rudolf A. Kalman first published his paper about the Kalman filter.
+ Those fusion algorithms are especially established in rocket science since they were first developed for the tracking of flying objects.
  Therefore there is already a lot of previous work which can be used in this thesis.
- For this thesis two books are used which provide the needed theory, this are 
- \cite{DavidWSchultz2004} which contains basic theory about state estimation especially with kalman filters. The second book
+ Especially two books provided most of the needed theory. The first one of them is
+ \cite{DavidWSchultz2004} which contains the basic theory about state estimation especially with Kalman filters. The second book
  \cite{SimonDan2006Ose:} is more focused on different approaches of state estimation and
- provides also different solution to common problems that occur while implementing a state estimation.
- In addition the Master Thesis \cite{BryanTongMinh2012} accesses more ore less the same issue as this thesis.
- Therefore it will be used mainly in the conceptional part of this paper.
- 
+ provides also different solutions to common problems that occur during the implementation of state estimations.
+ In addition the Master Thesis \cite{BryanTongMinh2012} accesses more or less the same issue as this thesis does.
+ Therefore in the conceptional part of this paper mainly this source will be used as a reference.
+
  \section{Sensors}
  \begin{figure}[h!]
   \centering
@@ -91,106 +90,101 @@ Total & 1000 & 100 \% \\ \hline
   \label{fig:SensorNetwork}
  \end{figure}
 
- As mentioned above different sensors are used in this years competition and due to the assumption
- that in concept the same sensors will be used in the competitions coming they will act as the basis for the sensor fusion-
+ As mentioned above, different sensors are used in this year's competition to measure the current state of the rocket. Based on the assumption
+ that basically the same sensors will be used in the coming competitions too, they will act as the basis for the sensor fusion algorithm.
  This used sensors and their settings will be described in this chapter.
 
  % Insert more information about those sensors if I get to them...
  \subsection{Accelerometer}
- First of all, comes the accelerometer. This is a well established and widely used sensor. It measures the force which is applied on the sensor in the three
- space dimensions. 
- This years accelerometer is adxl357 which will be sampled at 1000 Hz. 
- 
+ First of all comes the accelerometer. Accelerometers are well established and widely used sensors which measure the force which is applied onto the sensor in the three space dimensions.
+ This year's accelerometer is an ADXL357 which will be sampled at 1 000 Hz.
+
  \subsection{Gyrometer}
- The Gyrometer is needed to measure the posture of the Rocket. This is especially needed to determine if the rocket has a pitch angle. If so the pure
- acceleration on the z-axis can be calculated. The used gyrometer is ITG-3701 and it will also be sampled at 1000 Hz.
- 
+ The Gyrometer is needed to measure the rotational position of the Rocket. This is especially needed to determine if the rocket has a pitch angle. If so, the pure  acceleration on the z-axis can be calculated. The used gyrometer is ITG3701 and it will also be sampled at 1 000 Hz.
+
  \subsection{Barometers}
- Barometers are widely used in aviation, cause with a common pressure model the height can be calculated out of the measurements that the barometer takes.
- In this years competition three barometers are used. This are by name 2SMPB-02E and LPS22HBTR. They will be used with a sampling rate of 100Hz each.
- In addition the Humidity/Pressure sensor BME280 does also measure the pressure which can be used in addition.
- 
+ Barometers are widely used in aviation because with a common pressure model the height can be easily calculated out of the measurements that the barometer takes.
+ In this year's competition two barometers are used. These are by model name a 2SMPB-02E and a LPS22HBTR. They will be used with a sampling rate of 100 Hz each.
+ In addition the humidity and pressure sensor BME280 can be used as an additional source for the pressure too.
+
  \subsection{Temperature}
- The temperature is maybe needed to make the height out of the barometer better because most of the atmospheric model depend on the pressure as well as the temperature.
- This temperature will be provided by the different barometers which each posses a separate temperature sensor. 
- 
+ The temperature needs to be taken into account to make the height calculated out of the barometer data more accurate. This is because most of the atmospheric models depend besides of the pressure on the temperature as well.
+ This temperature will be provided directly by the different barometers which each posses a separate temperature sensor.
+
  \subsection{Magnometer}
- Also there are two Magnometer in the sensor network \ref{fig:SensorNetwork}. These measure the strengths of the surrounding magentic field.
- This can be used to determine the direction regarding the north pole.
- Due to the fact that the algorithm that will be developed in this thesis does not include the X- and Y-Axis,
- these sensor will not be used for the sensor fusion.
- 
+ Also there are two Magnometers in the sensor network. They measure the strength of the surrounding magentic field.
+ This can be used to determine the direction in relation to the north pole.
+ Due to the fact that the algorithm that will be developed in this thesis does not include the x- and y-axis in its calculations,
+ this sensor will not be used for the sensor fusion algorithm.
+
  \subsection{GPS}
- For next years competition differential GPS should be implemented with the help of two $\mu$blocks modules.
- This taken measurements are more precise as the rest of sensors but are taken much slower on a rate like 0.5 - 2Hz. 
- Therefore the algorithm should takes those provided measurements and interpolate between them with the data from the other sensors.
- 
+ For the next year's competition a differential GPS should be in place as well with the help of two $\mu$block modules.
+ This measurements are more precise as the rest of the sensors but are taken at a much slower sample rate around 0.5 - 2Hz.
+ Therefore the algorithm should already take these measurements into account too and interpolate them with the data from the other sensors.
+
  \section{Problems}
- Out of the research and the previous competition, different problems appeared that need to be addressed in this thesis to ensure an as good solution as possible.
- 
+ Out of the research and the previous competitions, different problems appeared that need to be addressed in this thesis to ensure an as good as possible solution.
+
  \subsection{Different Sensors}
  First of all there are different sensors which all do measure different values and have different parameters (precision, sampling time).
- So the algorithm has to use out the strengths of the different sensors to cancel out their individual weaknesses.
- Additionally, because this algorithm is system critical, it has to be reliable enough that it still is working properly if individual sensors are failing. 
- 
+ So the algorithm has to extract the strengths out of the different sensors and minimise their individual weaknesses.
+ Additionally because this algorithm is system critical, it has to be reliable enough that it still works properly if any of the sensors are failing.
+
  \subsection{System Load}
- The cycling time will be around 1 ms on a embedded system. This time was chosen on the behalf that it would be difficult to get the exact needed cycling time on ensure the needed controllability of the rockets apogee.
- Therefore the system load that the algorithm can cause, has to be strongly limited, so that it can be run on this given system. 
- The system this year is an 32 bit Arm Processor which runs on 168 MHz, assumed that the algorithm has at maximum the half of a software cycle, the maximum given clock cycles are around 84 000.
- With this cycles the processor can do around 10000 simple calculation (addition, subtraction, multiplication, division),
- cause with its floating point unit it needs on average around 8.5 cycles per operation (load, calculate, store). 
- This number is just a rough assumption, which means that the final system load should not exceed this value by a great manner.
- 
+ The cycling time will be around 1 ms on the embedded system. This time was chosen on behalf that it would be difficult to get the precisely needed cycling time to ensure the needed controllability of the rockets apogee.
+ Therefore the system load that the algorithm will cause has to be strongly limited for it to be able to run on this given system.
+ The system this year is a 32 bit ARM SoC which runs at 168 MHz. Assumed that the whole control software has at maximum half of a software cycle at his disposal the maximum clock cycles to be used for all calculations in one such software cycle is around 84 000.
+ With this amount of cycles the processor can do around 10 000 simple calculations (addition, subtraction, multiplication or division),
+ because its floating point unit needs on average around 8.5 cycles per operation (load, calculate and store). Of these 10 000 simple calculations at most 5 000 may be used by the sensor fusion algorithm.
+ This number is just a rough assumption, which means that the final system load should aim to not reach this value or at least not exceed it by a great number.
+
  \subsection{Precision}
- The Precision is after the system load the most critical attribute, if the algorithm does not get into the required accuracy the control algorithm has no exact estimation to relay on.
- The Control stated that the maximal error between the estimated and ground truth height should not exceed two meter. 
- This especially after the burnout at which the control with the air breaks will start.
- This accuracy is needed to proper control the aim of the apogee.
- 
+ The precision is after the system load the most critical attribute. If the algorithm fails to provide the required accuracy the control algorithm has no exact height estimation to rely on.
+ The control requirements state that the maximum error between the estimated and the real height should not exceed two meters to be able to properly control the aim of the apogee.
+ This accuracy is especially needed after the burnout when the apogee control with the air brakes will start.
+
  \subsection{Settling Time}
- The settling time defines the time span when the first reliable measurements arrive after burnout until the estimation is into the required precision.
- This time span has to be small enough to ensure that the controlling has enough time to aim for the desired apogee. In the current system the burnout occurs 
- occurs around 3-3.5 seconds after ignition, whereas the whole flight upwards only takes around 25 seconds. Therefore the settling time needs to be around just
- one second so that the control has as much time as possible for the controlling. Best would be if algorithm would already achieve this during the burning of the motor.
- But at least one second after the burnout a precise estimation is needed.
- 
+ The settling time is defined as the time span between the first reliable measurement after the burnout and the time  the estimation reaches its required precision.
+ This time span has to be small enough to ensure that the control has enough time to aim for the desired apogee. In the current system the burnout occurs around 3-3.5 seconds after ignition while the whole flight upwards only takes around 25 seconds. Therefore the settling should be finished at most
+ one second after burnout so that the control has as much time as possible for the aiming. Best would be if the algorithm already achieves its target precision while the motor is still burning.
+
  \subsection{Reliability}
- Due to given surroundings that come if a sensor package is placed into a rocket, the assumption has to be made that it will be possible that sensors fail in execution.
- Therefore the algorithm should provide the reliability of still working in a proper manner with some sensors failed. So that the execution of the controlling software
- in terms of functionality, but of course it has not to be as accurate as it would be with all sensors working.
+ Due to how a sensor package is placed into the rocket, the assumption has to be made that it will be possible that sensors fail in execution.
+ Therefore the algorithm should be reliable enough to still provide the control system with the desired data with some of the sensors failed, so the functionality of the whole system reamins intact. But of course the provided data has not to be as accurate any more as it would be with all sensors working.
 
  \subsection{Modularity}
- Although it can be assumed that the sensors will stay more or less they same over the next competitions, it is not ensured that exactly this sensors will be used.
- Therefore the presented algorithm should provide the possibility to exchange the sensors, as long as they resemble the old sensor in a feasible way.
- This will ensure a long term use of the provided algorithm.
- 
+ Although it can be assumed that the sensors will stay more or less the same over the next competitions, it is not certain that exactly the same sensors will be used.
+ Therefore the presented algorithm should provide the possibility to adapt to new sensors in an easy way, as long as they resemble the old sensor in a feasible way.
+ This will ensure a long term usability of the provided algorithm.
+
  \section{Requirements}
- 
+
  \begin{table}[h]
  \centering
- \begin{tabular}{|l|l|l|l|}	
- \hline	
+ \begin{tabular}{|l|l|l|l|}
+ \hline
  \bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Importance} \\ \hline
  System Load   & \# Calculation steps per loop & < 5000 & Critical \\ \hline
  Precision     & Error between estimation and ground truth  & < 2 m in height & High  \\ \hline
- Settling Time & Time from first reliable to optimal estimation  & < 1 s &  High \\ \hline
- Reliability   & Functioning Estimation with \#failed sensors & 2-3 sensors & Medium \\ \hline	
+ Settling Time & Time from first reliable to optimal estimation  & < 1 s after burnout &  High \\ \hline
+ Reliability   & Working estimation with \# failed sensors & 2-3 sensors & Medium \\ \hline
  Modularity    & Effort needed to change a sensors & < 10 h work &  Desirable \\ \hline
- \end{tabular}	
+ \end{tabular}
  \caption{Requirements table}
  \label{tab:Requirements}
  \end{table}
- 
- As seen in the table \ref{tab:Requirements} five requirements were drown out of the problem analysis. 
- First of all, there is critical requirement the system load. This is given as critical cause it is needed that the algorithm is efficient enough to be run on a embedded system.
- Any solution that would exceed the value given in this requirement in a great manner would be pointless in the frame of this thesis.
- Secondly there are two requirements which are tied together, the precision and settling time.
- Where the precision describes what a optimal estimation is under the context of this thesis, the settling time relies on this to be defined.
- Because the settling time is defined as the time span after the ignition until the best possible precision is achieved.
- The modularity as well as the reliability requirements are more a guide line then a hard must be achieved value.
- This because it is hard to define since it is depending on the coming competition.
- 
+
+ As seen in the table \ref{tab:Requirements} five requirements were drown out of the problem analysis.
+ First of all there is one critical requirement, namely the system load. This one is given the importance ``critical'' because the algorithm needs to be efficient enough to run on the embedded system given.
+ Any solution that would exceed the value given in this requirement in a great manner would be pointless in the frame of this thesis, because it will not be deployable to the target system.
+
+ Secondly there are two requirements which are tied together, the precision and the settling time.
+ Where the precision describes what an optimal estimation is in regard to the scope of this thesis, the settling time relies on this precision beeing reached as soon as possible.
+ The settling time is defined as the time span between the burnout until the best possible precision is achieved.
+
+ The modularity as well as the reliability requirements are more guidelines than hard requirements.
+ This because they will still lead to a usable solution for this year's project and their aim is hard to define since it is depending on the coming competitions and their circumstances.
+
  \section{Desired Solution}
- The desired solution should met the given requirements as optimal as possible. 
- While doing this it should also not be more complicated than needed.
- Optimal it would be fairly easy to understand to ensure the later use in coming competition.
+ The desired solution should meet all of the given requirements as good as possible.
+ While doing this it should also not get more complicated than needed because an easy understandable solution helps to ensure its further use in coming competitions.
