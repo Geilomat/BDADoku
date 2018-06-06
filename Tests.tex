@@ -333,14 +333,7 @@ Table \ref{tab:ErrorPointMassBetterNoise} shows that the system performs pure er
 While it also contains big maxima in speed, the acceleration and acceleration offset values are smaller than the ones of the system with only acceleration offset.
 Due to that the mean values (except the offset) are still better than most other.
 
-Figure \ref{fig:PointMassVSBetterNoise} shows that an overall better estimation can be achieved with this tactic.
-\begin{figure}[h!]
- \centering
- \includegraphics[width=.8\textwidth]{./Pictures/PointMassVSBetterNoise.jpg}
- % PointMassVSBetterNoise.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
- \caption{Error over time with and without better system noise}
- \label{fig:PointMassVSBetterNoise}
-\end{figure}
+This shows that an overall better estimation can be achieved with this tactic.
 This is mostly due to the better system noise vector which can be much better estimated this way.
 Also the additional effort to access this system model only occurs on the preparation,
 while it does have no effect on the computational effort during the flight itself.
@@ -402,6 +395,7 @@ therefore the height out of the pressure measurements is calculated wrong the er
 With this the error increases with the ascending rocket if it is not corrected by the GPS measurements.
 So the aim of the best performance system has to be that it should not depend too much on those GPS measurements for a good state estimation.
 
+\newpage
 \section{Best Performing System}
 Based on the results from the tests above the best performing system can be defined.
 The main goal is to achieve an as robust state estimation as possible that does also match the given accuracy requirements.
@@ -494,6 +488,7 @@ In addition the median of the height error does only increases by around one met
 But also the robustness of this system model can be seen, if there are no GPS measurements
 and the temperature gradient is 10 percent off over the whole flight it only results in a median error of the height estimation of 7.61 meter.
 
+\newpage
 \section{Sensor Outfall}
 In addition to the tests for the different system model implementation
 the possibility to simulate outfalls of the different sensors at start or during the flight was implemented for the last system model.
@@ -564,7 +559,7 @@ For this scenario the two barometers and the gyrometer were chosen to fail becau
 
 \begin{figure}[h!]
  \centering
- \includegraphics[width=.8\textwidth]{./Pictures/BestSystemPerformanceAccOutfall.jpg}
+ \includegraphics[width=.8\textwidth]{./Pictures/BestSystemPerformanceMultSensorOutfall.jpg}
  % ErrorPointMassBestSystemWithoutGPS.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Performance over a whole flight with both barometer and the gyrometer failed}
  \label{fig:PerformanceMOutfall}

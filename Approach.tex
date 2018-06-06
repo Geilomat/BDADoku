@@ -211,6 +211,7 @@
   While this solves the problems stated above it also produces a new. The system model can only describe linear dependencies between the state variables,
   but the relation between the pressure and the height is clearly non-linear in each atmospheric model.
   This dependency can be linearized, but if done so it does resemble the atmospheric model with less accuracy.
+  This is shown in the matrices below where the deviation of the pressure is also depending on the current speed with a gain factor of $KP_v$ which has to be defined depending on the temperature gradient.
   Based on such a linearisation the barometer measurements can be interpolated so the actual pressure is available at any loop iteration.
   This results in a 4x4 A matrix and also an all zero B vector for the dynamics equation which look like this:
   \begin{align*}
@@ -268,7 +269,7 @@
         0 & 1 & 0 & 0 & 0 \\
         0 & 0 & 1 & 0 & 0 \\
         0 & 0 & 0 & 0 & 0 \\
-        0 & Kp_h & 0 & 0 & 0 \\
+        0 & KP_v & 0 & 0 & 0 \\
         0 & 0 & 0 & 0 & 0 \\
         \end{bmatrix}
   & \hspace{1cm}

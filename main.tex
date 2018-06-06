@@ -23,6 +23,7 @@
 \usepackage{subcaption}
 \usepackage[toc,page]{appendix}
 \usepackage{natbib}
+\usepackage{pdfpages}
 
 \setlength{\headheight}{30pt}
 \bibliographystyle{plain}
@@ -108,6 +109,7 @@
 \begin{tabular}{l l}
 
 Author: & Michael Kurmann \\
+Department: & Electrical Engineering and Information Technology\\
 
 Supervisor: & Prof. Marcel Joss\\
 
@@ -135,12 +137,62 @@ taken directly or indirectly from sources are properly denoted as such.
 This paper has neither been previously submitted to another authority nor has it been published yet.
 
 \vspace{2cm}
-Horw, \today
+Horw, June 8, 2018
 
 \begin{abstract}
 \input{Abstract}
 \end{abstract}
 \tableofcontents
+
+\chapter*{Shortcuts and Variables}
+\section*{Shortcuts}
+\begin{tabbing}
+ ARIS    \hspace{5cm} \= Akademische Raumfahrt Initiative Schweiz \\
+ IREC 		\> Intercollegiate Rocket Engineering Competition \\
+ SAC		\> Spaceport America Cup \\
+ ERT		\> EPFL Rocket Team \\
+ EPFL	  	\> École Polytechnique Fédérale de Lausanne \\
+ GPS 		\> Global positioning system \\
+ FIR filter 	\> Finite impulse response filter\\
+ IIR filter 	\> Infinite impulse response filter\\
+ AR model 	\> Auto Regressive model\\
+ ARMA model 	\> Auto Regressive Moving Average model \\
+
+
+\end{tabbing}
+\section*{Variables}
+\begin{tabbing}
+ A \hspace{5.55cm}	\= System matrix \\
+ Ad 		\> Discrete system matrix \\
+ B 		\> Input matrix \\
+ Bd 		\> Discrete input matrix \\
+ C 		\> Output matrix \\
+ D 		\> Throughput matrix \\
+ x		\> State vector \\
+ u		\> Input vector \\
+ y		\> Output vector \\
+ G 		\> System noise input matrix \\
+ Gd 		\> Discrete system noise input matrix \\
+ Q 		\> System noise matrix \\
+ R 		\> Measurement noise matrix \\
+ K 		\> Kalman gain matrix \\
+ P 		\> Error covariance matrix \\ 
+ P0 		\> Pressure at ground level \\
+ T0 		\> Temperature at ground level \\
+ Tgrad 		\> Temperature gradient for the actual weather condition \\
+ M 		\> Molar mass of Earth's air: 0.0289644 kg/mol\\
+ g 		\> Gravitational acceleration: 9.80665 m/$s^2$\\
+ R 		\> Universal gas constant: 8.3144598 J/mol/K\\
+ $a_1 \hdots a_M$ \> FIR filter coefficients  \\
+ $\sigma_{\omega}$ \> Standard deviation of noise $\omega$ \\
+ $\gamma_{yy} $ \> Autocorrelation of y \\
+ h		\> Height \\
+ v 		\> Speed \\
+ a 	 	\> Acceleration \\
+ p		\> Pressure \\
+ $\varphi$	\> Pitch angle \\
+ $KP_v$		\> Pressure gain depending on speed
+\end{tabbing}
 
 \chapter{Introduction}
 \label{ch:Introduction}
@@ -164,9 +216,7 @@ Horw, \today
 
 \bibliography{References}
 
-\listoffigures
 
-\listoftables
 
 \begin{appendices}
 \input{Appendix}

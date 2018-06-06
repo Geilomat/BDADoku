@@ -23,9 +23,9 @@ The outcome can be seen in Table \ref{tab:RequirementsFilledOut}.
  \begin{tabular}{|l|l|l|l|}
  \hline
  \bf{Requirement}   & \bf{Rating} & \bf{Aim} & \bf{Result} \\ \hline
- System Load   & \# Calculation steps per loop & < 5000 & $\approx$2500 \\ \hline
- Precision     & Error between estimation and ground truth  & < 2m in Z & Median$\approx$ 0.92 m  \\ \hline
- Settling Time & Time from first reliable to optimal estimation  & < 1 s &  0.8 s\\ \hline
+ System Load   & \# Calculation steps per loop & < 5000 & $\approx$ 2500 \\ \hline
+ Precision     & Error between estimation and ground truth  & < 2m in height & Median $\approx$ 0.92 m  \\ \hline
+ Settling Time & Time from first reliable to optimal estimation  & 1 s after burnout &  0.9 s after ignition\\ \hline
  Reliability   & Working Estimation with \# failed sensors & 2-3 sensors & 3 sensors \\ \hline
  Modularity    & Effort needed to change a sensor & < 10 h work &  5-10 hours \\ \hline
  \end{tabular}
@@ -76,7 +76,7 @@ This is half of the maximum given by the requirements and does therefore fit the
  \subsection{Settling Time}
  No real settling time could have been defined in the tests because the error peaks rise above the aimed two meters during the whole flight.
  But if the settling time is used in terms of the time until the optimal possible estimation is working properly,
- it can be seen in the plot from Figure \ref{fig:BestSystemPerformance} that this is around 0.8 seconds after the ignition.
+ it can be seen in the plot from Figure \ref{fig:BestSystemPerformance} that this is around 0.9 seconds after the ignition.
  After this moment the estimation for the acceleration and speed are settled which means the height estimation should be at its best possible estimation.
 
  \subsection{Reliability}
@@ -124,14 +124,15 @@ From there either the simulation and/or the algorithm itself could be optimised 
 \section{Thanks}
 First of all credits have to be given to the whole ARIS team which supported this thesis with help and advice and great parts of an already working simulation which could be used to generate the trajectories.
 Special thanks goes to Thomas Lew and Fabian Lyck which provided their knowledge and the logging data from the test flights.
-But also the EPFL team of the Matterhorn competition has to be thanked which saved the success of this thesis by providing freely their logging data.
+But also the EPFL Rocket Team (ERT) team of the Matterhorn competition has to be thanked which saved the success of this thesis by providing freely their logging data.
+Finally I would like to thank Prof. Marcel Joss and Prof. Thomas Hunziker for providing their knowledge.
 
 \section{Reflection}
 First of all, all the requirements could be met which of course is satisfying. 
 But it has to be said that the tests were made in an optimised simulation environment and if this algorithm will preform likewise in reality has yet to be tested.
 Also since the final product consist mainly of concepts and simulation the functionality and suitability for the target system was hard to proof.
-This circumstance was even increased in the first weeks by the lack of usable sensor from test flights,
-which was fortunately solved by the EPFL team which provided their log data.
+This circumstance was even increased in the first weeks by the lack of usable sensor data from test flights,
+which was fortunately solved by the ERT team which provided their log data.
 
 Personally this thesis was a frightening new experience in the beginning because it covered a whole new theoretical field for me (sensor fusion/ Kalman filter).
 Also the range of this thesis was scattered wide by the multiple concepts form different electric engineering fields that had to been developed and used.
